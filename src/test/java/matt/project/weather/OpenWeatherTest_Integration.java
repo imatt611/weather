@@ -21,8 +21,7 @@ public class OpenWeatherTest_Integration {
     @Test
     public void retrievesWeatherDataFromOpenWeather()
     {
-        int zipCode = 97210;
-        WeatherData weatherData = openWeather.getWeather(zipCode);
+        WeatherData weatherData = openWeather.getWeather(97210);
 
         // Assertions are for required details only. See resources/openWeather_apiReference.json for [current] sample
         assertThat(weatherData.getName(), notNullValue(String.class));
