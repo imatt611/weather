@@ -17,7 +17,7 @@ import static org.junit.Assert.assertThat;
 @SuppressWarnings("resource")
 @RunWith(SpringRunner.class)
 @SpringBootTest
-public class WeatherAppTest {
+public class WeatherAppTest_Spring {
     private final ByteArrayOutputStream outContent = new ByteArrayOutputStream();
     private final ByteArrayOutputStream errContent = new ByteArrayOutputStream();
     private final PrintStream originalOut = System.out;
