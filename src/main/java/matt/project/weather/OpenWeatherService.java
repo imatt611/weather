@@ -19,13 +19,43 @@ class OpenWeatherService {
     @Value("${api.key.openWeather}")
     private String openWeatherApiKey;
 
-    WeatherData getWeather(int zipCode)
+    /**
+     * @param zipCode the Zip Code to validate
+     * @return the valid Zip Code
+     * @throws IllegalArgumentException if the Zip Code is not exactly 5 Integer-parseable digits
+     */
+    private static String getValidatedZipCode(String zipCode)
     {
-        log.trace(">>> GET for zipCode: {}", zipCode);
+        // Parse integer to guarantee digits
+        try {
+            Integer.parseInt(zipCode);
+        } catch (NumberFormatException e) {
+            throw new IllegalArgumentException("Zip Code must only contain digits.", e);
+        }
+
+        // Validate length
+        // Note: Integer#parseInt allows for a `-` sign at the beginning. Currently, a negative number will fail here
+        if (5 != zipCode.length())
+            throw new IllegalArgumentException("Zip Code must be exactly 5 digits. Zip+4 is not supported.");
+
+        return zipCode;
+    }
+
+    /**
+     * @param zipCode the Zip Code for which to get weather information
+     * @return weather information for the Zip Code according to <a href="https://openweathermap.org">OpenWeatherMap</a>
+     * @throws IllegalArgumentException if the Zip Code is not exactly 5 Integer-parseable digits
+     * @see <a href="https://openweathermap.org/current#zip">OpenWeatherMap Zip Code API</a>
+     */
+    WeatherData getWeather(String zipCode)
+    {
+        String validZipCode = getValidatedZipCode(zipCode);
+
+        log.trace(">>> GET for zipCode: {}", validZipCode);
         return restTemplate.getForObject(
                 "/weather?zip={zipCode}&appid={apiKey}",
                 WeatherData.class,
-                String.valueOf(zipCode),
+                validZipCode, // TODO Consider encoding here
                 openWeatherApiKey);
     }
 }
