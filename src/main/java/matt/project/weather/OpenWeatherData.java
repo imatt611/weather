@@ -8,7 +8,7 @@ import java.util.Map;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 @Data
-class WeatherData {
+class OpenWeatherData {
 
     @JsonProperty("coord")
     private Map<String, Double> coordinates;

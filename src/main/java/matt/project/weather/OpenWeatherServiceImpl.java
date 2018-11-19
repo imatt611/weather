@@ -44,14 +44,14 @@ class OpenWeatherServiceImpl implements OpenWeatherService {
     }
 
     @Override
-    public WeatherData getWeather(String zipCode)
+    public OpenWeatherData getWeather(String zipCode)
     {
         String validZipCode = getValidatedZipCode(zipCode);
 
         log.trace(">>> GET for zipCode: {}", validZipCode);
         return restTemplate.getForObject(
                 "/weather?zip={zipCode}&appid={apiKey}",
-                WeatherData.class,
+                OpenWeatherData.class,
                 validZipCode, // TODO Consider encoding here
                 openWeatherApiKey);
     }

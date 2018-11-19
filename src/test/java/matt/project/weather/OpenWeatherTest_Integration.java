@@ -21,12 +21,12 @@ public class OpenWeatherTest_Integration {
     @Test
     public void retrievesWeatherDataFromOpenWeather()
     {
-        WeatherData weatherData = openWeather.getWeather("97210");
+        OpenWeatherData openWeatherData = openWeather.getWeather("97210");
 
         // Assertions are for required details only. See resources/openWeather_apiReference.json for [current] sample
-        assertThat(weatherData.getName(), notNullValue(String.class));
-        assertThat(weatherData.getCoordinates(), hasEntry(is("lon"), any(Double.class)));
-        assertThat(weatherData.getCoordinates(), hasEntry(is("lat"), any(Double.class)));
-        assertThat(weatherData.getMain(), hasEntry(is("temp"), any(Double.class)));
+        assertThat(openWeatherData.getName(), notNullValue(String.class));
+        assertThat(openWeatherData.getCoordinates(), hasEntry(is("lon"), any(Double.class)));
+        assertThat(openWeatherData.getCoordinates(), hasEntry(is("lat"), any(Double.class)));
+        assertThat(openWeatherData.getMain(), hasEntry(is("temp"), any(Double.class)));
     }
 }
