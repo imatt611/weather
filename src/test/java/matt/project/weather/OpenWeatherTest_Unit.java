@@ -10,7 +10,7 @@ public class OpenWeatherTest_Unit {
     @BeforeClass
     public static void setup()
     {
-        openWeather = new OpenWeatherService();
+        openWeather = new OpenWeatherServiceImpl();
     }
 
     @Test(expected = IllegalArgumentException.class)
