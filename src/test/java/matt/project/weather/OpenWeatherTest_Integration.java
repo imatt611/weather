@@ -16,17 +16,18 @@ import static org.junit.Assert.assertThat;
 @SpringBootTest
 public class OpenWeatherTest_Integration {
 
-    @Autowired private OpenWeatherService openWeather;
+    @Autowired private OpenWeatherService openWeatherService;
 
     @Test
     public void retrievesWeatherDataFromOpenWeather()
     {
-        OpenWeatherData openWeatherData = openWeather.getWeather("97210");
+        OpenWeatherData openWeatherData = openWeatherService.getWeather("97210");
 
         // Assertions are for required details only. See resources/openWeather_apiReference.json for [current] sample
         assertThat(openWeatherData.getName(), notNullValue(String.class));
         assertThat(openWeatherData.getCoordinates(), hasEntry(is("lon"), any(Double.class)));
         assertThat(openWeatherData.getCoordinates(), hasEntry(is("lat"), any(Double.class)));
         assertThat(openWeatherData.getMain(), hasEntry(is("temp"), any(Double.class)));
+        // TODO? Assert that this is actually an external call
     }
 }
