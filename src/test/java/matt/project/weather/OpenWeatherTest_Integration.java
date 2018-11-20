@@ -28,5 +28,6 @@ public class OpenWeatherTest_Integration {
         assertThat(openWeatherData.getCoordinates(), hasEntry(is("lon"), any(Double.class)));
         assertThat(openWeatherData.getCoordinates(), hasEntry(is("lat"), any(Double.class)));
         assertThat(openWeatherData.getMain(), hasEntry(is("temp"), any(Double.class)));
+        // TODO? Assert that this is actually an external call
     }
 }
