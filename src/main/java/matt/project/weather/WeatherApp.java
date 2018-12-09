@@ -20,6 +20,6 @@ public class WeatherApp implements ApplicationRunner {
     public void run(ApplicationArguments args)
     {
         System.out.println(
-                "At the location $CITY_NAME, the temperature is $TEMPERATURE, the timezone is $TIMEZONE, and the elevation is $ELEVATION.");
+            "At the location $CITY_NAME, the temperature is $TEMPERATURE, the timezone is $TIMEZONE, and the elevation is $ELEVATION.");
     }
 }

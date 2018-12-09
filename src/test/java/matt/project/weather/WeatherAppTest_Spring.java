@@ -43,7 +43,7 @@ public class WeatherAppTest_Spring {
         // Must trigger #main from test to ensure it feeds System#out into the stream under test
         WeatherApp.main(new String[]{});
         Pattern weatherDescriptionPattern = Pattern.compile(
-                "At the location .*, the temperature is .*, the timezone is .*, and the elevation is .*\\.");
+            "At the location .*, the temperature is .*, the timezone is .*, and the elevation is .*\\.");
         assertThat(weatherDescriptionPattern.matcher(outContent.toString()).find(), is(true));
     }
 }

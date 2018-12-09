@@ -2,6 +2,8 @@ package matt.project.weather;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -16,14 +18,17 @@ import static org.junit.Assert.assertThat;
 @SpringBootTest
 public class OpenWeatherTest_Integration {
 
+    private final Logger log = LoggerFactory.getLogger(getClass());
     @Autowired private OpenWeatherService openWeatherService;
 
     @Test
     public void retrievesWeatherDataFromOpenWeather()
     {
-        OpenWeatherData openWeatherData = openWeatherService.getWeather("97210");
+        OpenWeatherData openWeatherData = openWeatherService.getWeather("97211");
 
-        // Assertions are for required details only. See resources/openWeather_apiReference.json for [current] sample
+        log.info("Retrieved Weather Data:\n\n{}\n", openWeatherData);
+
+        // Assertions are for required details only. See resources/testResponse_openWeather.json for [current] sample
         assertThat(openWeatherData.getName(), notNullValue(String.class));
         assertThat(openWeatherData.getCoordinates(), hasEntry(is("lon"), any(Double.class)));
         assertThat(openWeatherData.getCoordinates(), hasEntry(is("lat"), any(Double.class)));
