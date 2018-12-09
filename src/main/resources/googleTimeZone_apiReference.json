@@ -1,4 +1,4 @@
-// Example response from Zip Code endpoint
+// Example response
 {
   "dstOffset": 3600,
   "rawOffset": -18000,

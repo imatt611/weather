@@ -11,20 +11,20 @@ import static org.junit.Assert.assertThat;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
-public class GoogleTimeZoneTest_Integration {
+public class GoogleElevationTest_Integration {
 
-    @Autowired private GoogleTimeZoneService googleTimeZoneService;
+    @Autowired private GoogleElevationService googleElevationService;
 
     @Test
-    public void retrievesTimeZoneDataFromGoogle()
+    public void retrievesElevationDataFromGoogle()
     {
-        GoogleTimeZoneData timeZoneData = googleTimeZoneService.getTimeZone(45.52, -122.67);
+        GoogleElevationData elevationData = googleElevationService.getElevation(45.52, -122.67);
 
         // TODO Actually log in test output
-        System.out.println(timeZoneData);
+        System.out.println(elevationData);
 
-        // Assertions are for required details only. See resources/googleTimeZone_apiReference.json for [current] sample
-        assertThat(timeZoneData.getTimeZoneName(), notNullValue(String.class));
+        // Assertions are for required details only. See resources/googleElevation_apiReference.json for [current] sample
+        assertThat(elevationData.getElevation(), notNullValue(Double.class));
         // TODO? Assert that this is actually an external call
     }
 }
