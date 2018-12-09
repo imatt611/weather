@@ -18,7 +18,7 @@ public class GoogleTimeZoneTest_Integration {
     @Test
     public void retrievesTimeZoneDataFromGoogle()
     {
-        GoogleTimeZoneData timeZoneData = googleTimeZoneService.getTimeZone(-122.67, 45.52);
+        GoogleTimeZoneData timeZoneData = googleTimeZoneService.getTimeZone(45.52, -122.67);
 
         System.out.println(timeZoneData);
 
