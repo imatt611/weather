@@ -19,7 +19,7 @@ class OpenWeatherServiceImpl implements OpenWeatherService {
     private final RestTemplate restTemplate = new RestTemplateBuilder().rootUri(ROOT_URI).build();
 
     @Value("${api.key.openWeather}")
-    private String openWeatherApiKey;
+    private String apiKey;
 
     /**
      * @param zipCode the Zip Code to validate
@@ -53,6 +53,6 @@ class OpenWeatherServiceImpl implements OpenWeatherService {
                 "/weather?zip={zipCode}&appid={apiKey}",
                 OpenWeatherData.class,
                 validZipCode, // TODO Consider encoding here
-                openWeatherApiKey);
+                apiKey);
     }
 }
