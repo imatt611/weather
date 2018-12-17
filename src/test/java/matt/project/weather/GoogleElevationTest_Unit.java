@@ -11,7 +11,7 @@ import static org.junit.Assert.assertThat;
 public class GoogleElevationTest_Unit {
 
     @Test
-    public void unpacksResults() throws Exception
+    public void deserializesResults() throws Exception
     {
         ObjectMapper mapper = new ObjectMapper();
         URL src = getClass().getResource("/sampleResponse_googleElevation.json");
