@@ -14,7 +14,7 @@ public class GoogleElevationTest_Unit {
     public void deserializesResults() throws Exception
     {
         ObjectMapper mapper = new ObjectMapper();
-        URL src = getClass().getResource("/sampleResponse_googleElevation.json");
+        URL src = getClass().getResource("/testResponse_googleElevation.json");
 
         GoogleElevationData elevationData = mapper.readValue(src, GoogleElevationData.class);
 

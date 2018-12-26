@@ -65,7 +65,7 @@ public class OpenWeatherTest_Unit {
 
         // when
         ObjectMapper mapper = new ObjectMapper();
-        URL src = getClass().getResource("/sampleResponse_openWeather.json");
+        URL src = getClass().getResource("/testResponse_openWeather.json");
         OpenWeatherData weatherData = mapper.readValue(src, OpenWeatherData.class);
 
         assertThat(weatherData, equalTo(expectedWeatherData));

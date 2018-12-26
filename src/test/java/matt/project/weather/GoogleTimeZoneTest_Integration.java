@@ -26,7 +26,7 @@ public class GoogleTimeZoneTest_Integration {
 
         log.info("Retrieved Time Zone Data:\n\n{}\n", timeZoneData);
 
-        // Assertions are for required details only. See resources/sampleResponse_googleTimeZone.json for [current] sample
+        // Assertions are for required details only. See resources/testResponse_googleTimeZone.json for [current] sample
         assertThat(timeZoneData.getTimeZoneName(), notNullValue(String.class));
         // TODO? Assert that this is actually an external call
     }

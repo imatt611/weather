@@ -26,7 +26,7 @@ public class GoogleElevationTest_Integration {
 
         log.info("Retrieved Elevation Data:\n\n{}\n", elevationData);
 
-        // Assertions are for required details only. See resources/sampleResponse_googleElevation.json for [current] sample
+        // Assertions are for required details only. See resources/testResponse_googleElevation.json for [current] sample
         assertThat(elevationData.getElevation(), notNullValue(Double.class));
         // TODO? Assert that this is actually an external call
     }

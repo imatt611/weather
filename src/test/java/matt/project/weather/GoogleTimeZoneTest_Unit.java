@@ -19,7 +19,7 @@ public class GoogleTimeZoneTest_Unit {
 
         // when
         ObjectMapper mapper = new ObjectMapper();
-        URL src = getClass().getResource("/sampleResponse_googleTimeZone.json");
+        URL src = getClass().getResource("/testResponse_googleTimeZone.json");
         GoogleTimeZoneData timeZoneData = mapper.readValue(src, GoogleTimeZoneData.class);
 
         assertThat(timeZoneData, equalTo(expectedTimeZoneData));
