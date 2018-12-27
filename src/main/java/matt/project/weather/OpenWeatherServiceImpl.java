@@ -1,6 +1,5 @@
 package matt.project.weather;
 
-import lombok.NoArgsConstructor;
 import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -11,15 +10,22 @@ import org.springframework.web.client.RestTemplate;
 @Service
 @Slf4j
 @ToString
-@NoArgsConstructor
 class OpenWeatherServiceImpl implements OpenWeatherService {
 
-    private static final String ROOT_URI = "https://api.openweathermap.org/data/2.5";
+    private final RestTemplate restTemplate;
 
-    private final RestTemplate restTemplate = new RestTemplateBuilder().rootUri(ROOT_URI).build();
-
-    @Value("${api.key.openWeather}")
+    @Value(PROP_REF__API_KEY_OPEN_WEATHER)
     private String apiKey;
+
+    OpenWeatherServiceImpl()
+    {
+        restTemplate = new RestTemplateBuilder().rootUri(ROOT_URI).build();
+    }
+
+    OpenWeatherServiceImpl(RestTemplate template)
+    {
+        restTemplate = template;
+    }
 
     /**
      * @param zipCode the Zip Code to validate
@@ -50,7 +56,7 @@ class OpenWeatherServiceImpl implements OpenWeatherService {
 
         log.trace(">>> GET for zipCode: {}", validZipCode);
         return restTemplate.getForObject(
-                "/weather?zip={zipCode}&appid={apiKey}",
+                GET_WEATHER_ENDPOINT_TEMPLATE,
                 OpenWeatherData.class,
                 validZipCode, // TODO Consider encoding here
                 apiKey);
