@@ -2,7 +2,6 @@ package matt.project.weather;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Test;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
@@ -27,9 +26,6 @@ public class GoogleTimeZoneTest_Unit {
 
     private static final String TEST_RESPONSE_GOOGLE_TIME_ZONE_JSON = "/testResponse_googleTimeZone.json";
 
-    @Value(GoogleTimeZoneService.PROP_REF__API_KEY_GOOGLE_TIME_ZONE)
-    private String apiKey;
-
     @Test
     public void deserializesResults() throws Exception
     {
@@ -45,12 +41,11 @@ public class GoogleTimeZoneTest_Unit {
         assertThat(timeZoneData, equalTo(expectedTimeZoneData));
     }
 
-
     @Test
     public void usesKnownGoogleTimeZoneApiContractAndReturnsGoogleTimeZoneData() throws Exception
     {
         // given
-        String rootUri = GoogleTimeZoneService.ROOT_URI;
+        String rootUri = GoogleTimeZoneService.ROOT_URI__TIMEZONE;
         RestTemplate restTemplate = new RestTemplateBuilder().rootUri(rootUri).build();
         GoogleTimeZoneService localTestGoogleTimeZoneService = new GoogleTimeZoneServiceImpl(restTemplate);
 
@@ -65,11 +60,11 @@ public class GoogleTimeZoneTest_Unit {
 
         String targetUri = restTemplate
                 .getUriTemplateHandler()
-                .expand(GoogleTimeZoneService.GET_TIMEZONE_ENDPOINT_TEMPLATE,
+                .expand(GoogleTimeZoneService.ENDPOINT_TEMPLATE__GET_TIMEZONE,
                         testLatLongTuple.get("lat"),
                         testLatLongTuple.get("lon"),
                         Instant.now().getEpochSecond(),
-                        apiKey)
+                        "")
                 .toString();
 
         // expect
