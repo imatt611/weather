@@ -34,10 +34,10 @@ public class GoogleElevationServiceImpl implements GoogleElevationService {
 
         log.trace(">>> GET Elevation for latitude/longitude: {}/{}", latitude, longitude);
         return restTemplate.getForObject(
-                ENDPOINT_TEMPLATE__GET_ELEVATION,
-                GoogleElevationData.class,
-                latitude, // TODO Consider encoding here
-                longitude,
-                apiKey);
+            ENDPOINT_TEMPLATE__GET_ELEVATION,
+            GoogleElevationData.class,
+            latitude, // TODO Consider encoding here
+            longitude,
+            apiKey);
     }
 }

@@ -109,18 +109,18 @@ public class OpenWeatherTest_Unit {
         MockRestServiceServer mockServer = MockRestServiceServer.createServer(restTemplate);
 
         String testDataJsonString = String.join("", Files.readAllLines(
-                Paths.get(getClass().getResource(TEST_RESPONSE_OPEN_WEATHER_JSON).getPath())));
+            Paths.get(getClass().getResource(TEST_RESPONSE_OPEN_WEATHER_JSON).getPath())));
 
         String targetUri = restTemplate
-                .getUriTemplateHandler()
-                .expand(OpenWeatherService.GET_WEATHER_ENDPOINT_TEMPLATE, VALID_TEST_ZIP_CODE, apiKey)
-                .toString();
+            .getUriTemplateHandler()
+            .expand(OpenWeatherService.GET_WEATHER_ENDPOINT_TEMPLATE, VALID_TEST_ZIP_CODE, apiKey)
+            .toString();
 
         // expect
         mockServer
-                .expect(requestTo(targetUri))
-                .andExpect(method(HttpMethod.GET))
-                .andRespond(withSuccess(testDataJsonString, MediaType.APPLICATION_JSON));
+            .expect(requestTo(targetUri))
+            .andExpect(method(HttpMethod.GET))
+            .andRespond(withSuccess(testDataJsonString, MediaType.APPLICATION_JSON));
 
         // when
         OpenWeatherData mockData = localTestOpenWeatherService.getWeather(VALID_TEST_ZIP_CODE);

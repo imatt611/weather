@@ -47,29 +47,29 @@ public class GoogleElevationTest_Unit {
         MockRestServiceServer mockServer = MockRestServiceServer.createServer(restTemplate);
 
         String testDataJsonString = String.join("", Files.readAllLines(
-                Paths.get(getClass().getResource(TEST_RESPONSE_GOOGLE_ELEVATION_JSON).getPath())));
+            Paths.get(getClass().getResource(TEST_RESPONSE_GOOGLE_ELEVATION_JSON).getPath())));
 
         Map<String, Double> testLatLongTuple = new HashMap<>(2);
         testLatLongTuple.put("lat", 28.59);
         testLatLongTuple.put("lon", 77.0);
 
         String targetUri = restTemplate
-                .getUriTemplateHandler()
-                .expand(GoogleElevationService.ENDPOINT_TEMPLATE__GET_ELEVATION,
-                        testLatLongTuple.get("lat"),
-                        testLatLongTuple.get("lon"),
-                        "")
-                .toString();
+            .getUriTemplateHandler()
+            .expand(GoogleElevationService.ENDPOINT_TEMPLATE__GET_ELEVATION,
+                    testLatLongTuple.get("lat"),
+                    testLatLongTuple.get("lon"),
+                    "")
+            .toString();
 
         // expect
         mockServer
-                .expect(requestTo(targetUri))
-                .andExpect(method(HttpMethod.GET))
-                .andRespond(withSuccess(testDataJsonString, MediaType.APPLICATION_JSON));
+            .expect(requestTo(targetUri))
+            .andExpect(method(HttpMethod.GET))
+            .andRespond(withSuccess(testDataJsonString, MediaType.APPLICATION_JSON));
 
         // when
         GoogleElevationData mockData = localTestGoogleElevationService
-                .getElevation(testLatLongTuple.get("lat"), testLatLongTuple.get("lon"));
+            .getElevation(testLatLongTuple.get("lat"), testLatLongTuple.get("lon"));
 
         mockServer.verify();
         assertThat(mockData, instanceOf(GoogleElevationData.class));

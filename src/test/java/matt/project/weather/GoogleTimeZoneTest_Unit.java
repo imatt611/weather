@@ -55,7 +55,7 @@ public class GoogleTimeZoneTest_Unit {
         MockRestServiceServer mockServer = MockRestServiceServer.createServer(restTemplate);
 
         String testDataJsonString = String.join("", Files.readAllLines(
-                Paths.get(getClass().getResource(TEST_RESPONSE_GOOGLE_TIME_ZONE_JSON).getPath())));
+            Paths.get(getClass().getResource(TEST_RESPONSE_GOOGLE_TIME_ZONE_JSON).getPath())));
 
         Map<String, Double> testLatLongTuple = new HashMap<>(2);
         testLatLongTuple.put("lat", 28.59);
@@ -63,21 +63,21 @@ public class GoogleTimeZoneTest_Unit {
 
         // expect
         mockServer
-                .expect(requestTo(
-                        stringContainsInOrder(
-                                Arrays.asList(ROOT_URI__TIMEZONE,
-                                              ENDPOINT_TEMPLATE__GET_TIMEZONE
-                                                      .substring(0, ENDPOINT_TEMPLATE__GET_TIMEZONE.indexOf('{')),
-                                              testLatLongTuple.get("lat").toString(),
-                                              testLatLongTuple.get("lon").toString(),
-                                              String.valueOf(Instant.now().getEpochSecond())
-                                                      .substring(0, 6))))) // Close enough for unit test
-                .andExpect(method(HttpMethod.GET))
-                .andRespond(withSuccess(testDataJsonString, MediaType.APPLICATION_JSON));
+            .expect(requestTo(
+                stringContainsInOrder(
+                    Arrays.asList(ROOT_URI__TIMEZONE,
+                                  ENDPOINT_TEMPLATE__GET_TIMEZONE
+                                      .substring(0, ENDPOINT_TEMPLATE__GET_TIMEZONE.indexOf('{')),
+                                  testLatLongTuple.get("lat").toString(),
+                                  testLatLongTuple.get("lon").toString(),
+                                  String.valueOf(Instant.now().getEpochSecond())
+                                      .substring(0, 6))))) // Close enough for unit test
+            .andExpect(method(HttpMethod.GET))
+            .andRespond(withSuccess(testDataJsonString, MediaType.APPLICATION_JSON));
 
         // when
         GoogleTimeZoneData mockData = localTestGoogleTimeZoneService
-                .getTimeZone(testLatLongTuple.get("lat"), testLatLongTuple.get("lon"));
+            .getTimeZone(testLatLongTuple.get("lat"), testLatLongTuple.get("lon"));
 
         mockServer.verify();
         assertThat(mockData, instanceOf(GoogleTimeZoneData.class));

@@ -36,11 +36,11 @@ public class GoogleTimeZoneServiceImpl implements GoogleTimeZoneService {
 
         log.trace(">>> GET Time Zone for latitude/longitude: {}/{}", latitude, longitude);
         return restTemplate.getForObject(
-                ENDPOINT_TEMPLATE__GET_TIMEZONE,
-                GoogleTimeZoneData.class,
-                latitude, // TODO Consider encoding here
-                longitude,
-                Instant.now().getEpochSecond(),
-                apiKey);
+            ENDPOINT_TEMPLATE__GET_TIMEZONE,
+            GoogleTimeZoneData.class,
+            latitude, // TODO Consider encoding here
+            longitude,
+            Instant.now().getEpochSecond(),
+            apiKey);
     }
 }
