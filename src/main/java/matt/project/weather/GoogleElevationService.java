@@ -9,11 +9,9 @@ public interface GoogleElevationService {
     String PROP_REF__API_KEY_GOOGLE_ELEVATION = PROP_REF__API_KEY_GOOGLE_TIMEZONE;
 
     /**
-     * TODO
-     *
-     * @param latitude
-     * @param longitude
-     * @return
+     * @param latitude the latitude which, paired with {@code longitude}, represents a geographic location
+     * @param longitude the longitude which, paired with {@code latitude}, represents a geographic location
+     * @return Elevation information at the location represented by the {@code latitude, longitude} tuple
      */
     GoogleElevationData getElevation(double latitude, double longitude);
 }
