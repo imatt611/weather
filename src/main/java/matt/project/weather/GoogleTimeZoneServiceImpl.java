@@ -14,16 +14,14 @@ import java.time.Instant;
 @ToString
 public class GoogleTimeZoneServiceImpl implements GoogleTimeZoneService {
 
-    private static final String ROOT_URI = GoogleTimeZoneService.ROOT_URI;
-
     private final RestTemplate restTemplate;
 
-    @Value(PROP_REF__API_KEY_GOOGLE_TIME_ZONE)
+    @Value(PROP_REF__API_KEY_GOOGLE_TIMEZONE)
     private String apiKey;
 
     public GoogleTimeZoneServiceImpl()
     {
-        restTemplate = new RestTemplateBuilder().rootUri(ROOT_URI).build();
+        restTemplate = new RestTemplateBuilder().rootUri(ROOT_URI__TIMEZONE).build();
     }
 
     public GoogleTimeZoneServiceImpl(RestTemplate template)
@@ -38,7 +36,7 @@ public class GoogleTimeZoneServiceImpl implements GoogleTimeZoneService {
 
         log.trace(">>> GET Time Zone for latitude/longitude: {}/{}", latitude, longitude);
         return restTemplate.getForObject(
-                GET_TIMEZONE_ENDPOINT_TEMPLATE,
+                ENDPOINT_TEMPLATE__GET_TIMEZONE,
                 GoogleTimeZoneData.class,
                 latitude, // TODO Consider encoding here
                 longitude,

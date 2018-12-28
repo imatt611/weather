@@ -15,9 +15,8 @@ import static org.junit.Assert.assertThat;
 @SpringBootTest
 public class GoogleTimeZoneTest_Integration {
 
-    @Autowired private GoogleTimeZoneService googleTimeZoneService;
-
     private final Logger log = LoggerFactory.getLogger(getClass());
+    @Autowired private GoogleTimeZoneService googleTimeZoneService;
 
     @Test
     public void retrievesTimeZoneDataFromGoogle()

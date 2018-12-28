@@ -15,9 +15,8 @@ import static org.junit.Assert.assertThat;
 @SpringBootTest
 public class GoogleElevationTest_Integration {
 
-    @Autowired private GoogleElevationService googleElevationService;
-
     private final Logger log = LoggerFactory.getLogger(getClass());
+    @Autowired private GoogleElevationService googleElevationService;
 
     @Test
     public void retrievesElevationDataFromGoogle()

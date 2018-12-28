@@ -18,9 +18,8 @@ import static org.junit.Assert.assertThat;
 @SpringBootTest
 public class OpenWeatherTest_Integration {
 
-    @Autowired private OpenWeatherService openWeatherService;
-
     private final Logger log = LoggerFactory.getLogger(getClass());
+    @Autowired private OpenWeatherService openWeatherService;
 
     @Test
     public void retrievesWeatherDataFromOpenWeather()
