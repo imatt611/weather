@@ -18,7 +18,7 @@ public class GoogleElevationServiceImpl implements GoogleElevationService {
 
     private final RestTemplate restTemplate = new RestTemplateBuilder().rootUri(ROOT_URI).build();
 
-    @Value("${api.key.google}")
+    @Value(PROP_REF__API_KEY_GOOGLE_ELEVATION)
     private String apiKey;
 
     @Override
@@ -26,7 +26,7 @@ public class GoogleElevationServiceImpl implements GoogleElevationService {
     {
         // TODO Input validation
 
-        log.trace(">>> GET for latitude/longitude: {}/{}", latitude, longitude);
+        log.trace(">>> GET Elevation for latitude/longitude: {}/{}", latitude, longitude);
         return restTemplate.getForObject(
                 "/json?locations={latitude},{longitude}&key={apiKey}",
                 GoogleElevationData.class,

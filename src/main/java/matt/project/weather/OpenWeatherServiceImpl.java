@@ -54,7 +54,7 @@ class OpenWeatherServiceImpl implements OpenWeatherService {
     {
         String validZipCode = getValidatedZipCode(zipCode);
 
-        log.trace(">>> GET for zipCode: {}", validZipCode);
+        log.trace(">>> GET Weather for zipCode: {}", validZipCode);
         return restTemplate.getForObject(
                 GET_WEATHER_ENDPOINT_TEMPLATE,
                 OpenWeatherData.class,

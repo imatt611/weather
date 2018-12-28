@@ -1,6 +1,5 @@
 package matt.project.weather;
 
-import lombok.NoArgsConstructor;
 import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -13,24 +12,33 @@ import java.time.Instant;
 @Service
 @Slf4j
 @ToString
-@NoArgsConstructor
 public class GoogleTimeZoneServiceImpl implements GoogleTimeZoneService {
 
-    private static final String ROOT_URI = "https://maps.googleapis.com/maps/api/timezone";
+    private static final String ROOT_URI = GoogleTimeZoneService.ROOT_URI;
 
-    private final RestTemplate restTemplate = new RestTemplateBuilder().rootUri(ROOT_URI).build();
+    private final RestTemplate restTemplate;
 
-    @Value("${api.key.google}")
+    @Value(PROP_REF__API_KEY_GOOGLE_TIME_ZONE)
     private String apiKey;
+
+    public GoogleTimeZoneServiceImpl()
+    {
+        restTemplate = new RestTemplateBuilder().rootUri(ROOT_URI).build();
+    }
+
+    public GoogleTimeZoneServiceImpl(RestTemplate template)
+    {
+        restTemplate = template;
+    }
 
     @Override
     public GoogleTimeZoneData getTimeZone(double latitude, double longitude)
     {
         // TODO Input validation
 
-        log.trace(">>> GET for latitude/longitude: {}/{}", latitude, longitude);
+        log.trace(">>> GET Time Zone for latitude/longitude: {}/{}", latitude, longitude);
         return restTemplate.getForObject(
-                "/json?location={latitude},{longitude}&timestamp={timestamp}&key={apiKey}",
+                GET_TIMEZONE_ENDPOINT_TEMPLATE,
                 GoogleTimeZoneData.class,
                 latitude, // TODO Consider encoding here
                 longitude,
