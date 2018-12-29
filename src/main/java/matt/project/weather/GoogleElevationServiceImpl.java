@@ -30,13 +30,14 @@ public class GoogleElevationServiceImpl implements GoogleElevationService {
     @Override
     public GoogleElevationData getElevation(double latitude, double longitude)
     {
-        // TODO Input validation
+        double validLatitude = LatitudeLongitude.getValidatedLatitude(latitude);
+        double validLongitude = LatitudeLongitude.getValidatedLongitude(longitude);
 
-        log.trace(">>> GET Elevation for latitude/longitude: {}/{}", latitude, longitude);
+        log.trace(">>> GET Elevation for latitude/longitude: {}/{}", validLatitude, validLongitude);
         return restTemplate.getForObject(
             ENDPOINT_TEMPLATE__GET_ELEVATION,
             GoogleElevationData.class,
-            latitude, // TODO Consider encoding here
+            latitude,
             longitude,
             apiKey);
     }

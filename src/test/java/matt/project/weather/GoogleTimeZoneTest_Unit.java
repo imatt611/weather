@@ -22,6 +22,7 @@ import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.instanceOf;
 import static org.hamcrest.Matchers.stringContainsInOrder;
 import static org.junit.Assert.assertThat;
+import static org.mockito.Mockito.mock;
 import static org.springframework.test.web.client.match.MockRestRequestMatchers.method;
 import static org.springframework.test.web.client.match.MockRestRequestMatchers.requestTo;
 import static org.springframework.test.web.client.response.MockRestResponseCreators.withSuccess;
@@ -29,6 +30,39 @@ import static org.springframework.test.web.client.response.MockRestResponseCreat
 public class GoogleTimeZoneTest_Unit {
 
     private static final String TEST_RESPONSE_GOOGLE_TIME_ZONE_JSON = "/testResponse_googleTimeZone.json";
+    private static final GoogleTimeZoneService timeZoneService = new GoogleTimeZoneServiceImpl(
+        mock(RestTemplate.class));
+
+    @Test(expected = IllegalArgumentException.class)
+    public void refusesLatitudeOver90() throws IllegalArgumentException
+    {
+        timeZoneService.getTimeZone(90.000000000001, 45.0);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void refusesLatitudeUnderNegative90() throws IllegalArgumentException
+    {
+        timeZoneService.getTimeZone(-90.000000000001, 45.0);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void refusesLongitudeOver180() throws IllegalArgumentException
+    {
+        timeZoneService.getTimeZone(45.0, 180.00001);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void refusesLongitudeUnderNegative180() throws IllegalArgumentException
+    {
+        timeZoneService.getTimeZone(-45.0, -180.00001);
+    }
+
+    @SuppressWarnings("JUnitTestMethodWithNoAssertions") // no throw passes test
+    @Test
+    public void acceptsValidArguments()
+    {
+        timeZoneService.getTimeZone(45.0, 99.5);
+    }
 
     @Test
     public void deserializesResults() throws Exception

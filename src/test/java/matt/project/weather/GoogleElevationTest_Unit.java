@@ -14,16 +14,52 @@ import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Map;
 
+import static matt.project.weather.GoogleElevationService.ENDPOINT_TEMPLATE__GET_ELEVATION;
+import static matt.project.weather.GoogleElevationService.ROOT_URI__ELEVATION;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.instanceOf;
 import static org.junit.Assert.assertThat;
+import static org.mockito.Mockito.mock;
 import static org.springframework.test.web.client.match.MockRestRequestMatchers.method;
-import static org.springframework.test.web.client.match.MockRestRequestMatchers.requestTo;
+import static org.springframework.test.web.client.match.MockRestRequestMatchers.requestToUriTemplate;
 import static org.springframework.test.web.client.response.MockRestResponseCreators.withSuccess;
 
 public class GoogleElevationTest_Unit {
 
     private static final String TEST_RESPONSE_GOOGLE_ELEVATION_JSON = "/testResponse_googleElevation.json";
+    private static final GoogleElevationService elevationService = new GoogleElevationServiceImpl(
+        mock(RestTemplate.class));
+
+    @Test(expected = IllegalArgumentException.class)
+    public void refusesLatitudeOver90() throws IllegalArgumentException
+    {
+        elevationService.getElevation(90.000000000001, 45.0);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void refusesLatitudeUnderNegative90() throws IllegalArgumentException
+    {
+        elevationService.getElevation(-90.000000000001, 45.0);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void refusesLongitudeOver180() throws IllegalArgumentException
+    {
+        elevationService.getElevation(45.0, 180.00001);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void refusesLongitudeUnderNegative180() throws IllegalArgumentException
+    {
+        elevationService.getElevation(-45.0, -180.00001);
+    }
+
+    @SuppressWarnings("JUnitTestMethodWithNoAssertions") // no throw passes test
+    @Test
+    public void acceptsValidArguments()
+    {
+        elevationService.getElevation(45.0, 99.5);
+    }
 
     @Test
     public void deserializesResults() throws Exception
@@ -40,8 +76,7 @@ public class GoogleElevationTest_Unit {
     public void usesKnownGoogleElevationApiContractAndReturnsGoogleElevationData() throws Exception
     {
         // given
-        String rootUri = GoogleElevationService.ROOT_URI__ELEVATION;
-        RestTemplate restTemplate = new RestTemplateBuilder().rootUri(rootUri).build();
+        RestTemplate restTemplate = new RestTemplateBuilder().rootUri(ROOT_URI__ELEVATION).build();
         GoogleElevationService localTestGoogleElevationService = new GoogleElevationServiceImpl(restTemplate);
 
         MockRestServiceServer mockServer = MockRestServiceServer.createServer(restTemplate);
@@ -53,17 +88,12 @@ public class GoogleElevationTest_Unit {
         testLatLongTuple.put("lat", 28.59);
         testLatLongTuple.put("lon", 77.0);
 
-        String targetUri = restTemplate
-            .getUriTemplateHandler()
-            .expand(GoogleElevationService.ENDPOINT_TEMPLATE__GET_ELEVATION,
-                    testLatLongTuple.get("lat"),
-                    testLatLongTuple.get("lon"),
-                    "")
-            .toString();
-
         // expect
         mockServer
-            .expect(requestTo(targetUri))
+            .expect(requestToUriTemplate(ROOT_URI__ELEVATION + ENDPOINT_TEMPLATE__GET_ELEVATION,
+                                         testLatLongTuple.get("lat"),
+                                         testLatLongTuple.get("lon"),
+                                         ""))
             .andExpect(method(HttpMethod.GET))
             .andRespond(withSuccess(testDataJsonString, MediaType.APPLICATION_JSON));
 

@@ -1,7 +1,6 @@
 package matt.project.weather;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.junit.BeforeClass;
 import org.junit.Test;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.http.HttpMethod;
@@ -29,13 +28,7 @@ public class OpenWeatherTest_Unit {
 
     private static final String TEST_RESPONSE_OPEN_WEATHER_JSON = "/testResponse_openWeather.json";
     private static final String VALID_TEST_ZIP_CODE = "97210";
-    private static OpenWeatherService openWeatherService;
-
-    @BeforeClass
-    public static void setup()
-    {
-        openWeatherService = new OpenWeatherServiceImpl();
-    }
+    private static final OpenWeatherService openWeatherService = new OpenWeatherServiceImpl(mock(RestTemplate.class));
 
     @Test(expected = IllegalArgumentException.class)
     public void refusesNegativeZipCode() throws IllegalArgumentException
@@ -65,9 +58,7 @@ public class OpenWeatherTest_Unit {
     @Test
     public void acceptsValidArgument()
     {
-        OpenWeatherService localTestOpenWeatherService = new OpenWeatherServiceImpl(mock(RestTemplate.class));
-
-        localTestOpenWeatherService.getWeather(VALID_TEST_ZIP_CODE);
+        openWeatherService.getWeather(VALID_TEST_ZIP_CODE);
     }
 
     @Test

@@ -17,7 +17,7 @@ class GoogleElevationData {
     @JsonProperty("results")
     private void unpack(List<Object> results)
     {
-        // Assumes only a single result due to a single lat/long tuple in API request
+        // Assumes only a single result due to a single (lat, long) tuple in API request
         Map<String, Object> result = (Map<String, Object>) results.get(0);
         elevation = (double) result.get("elevation");
     }

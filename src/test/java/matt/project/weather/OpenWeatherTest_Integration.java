@@ -28,11 +28,10 @@ public class OpenWeatherTest_Integration {
 
         log.info("Retrieved Weather Data:\n\n{}\n", openWeatherData);
 
-        // Assertions are for required details only. See resources/testResponse_openWeather.json for [current] sample
+        // Assertions are for required details only. See resources/testResponse_openWeather.json for sample
         assertThat(openWeatherData.getName(), notNullValue(String.class));
         assertThat(openWeatherData.getCoordinates(), hasEntry(is("lon"), any(Double.class)));
         assertThat(openWeatherData.getCoordinates(), hasEntry(is("lat"), any(Double.class)));
         assertThat(openWeatherData.getMain(), hasEntry(is("temp"), any(Double.class)));
-        // TODO? Assert that this is actually an external call
     }
 }

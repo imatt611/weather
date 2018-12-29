@@ -9,6 +9,9 @@ import org.springframework.web.client.RestTemplate;
 
 import java.time.Instant;
 
+import static matt.project.weather.LatitudeLongitude.getValidatedLatitude;
+import static matt.project.weather.LatitudeLongitude.getValidatedLongitude;
+
 @Service
 @Slf4j
 @ToString
@@ -32,13 +35,14 @@ public class GoogleTimeZoneServiceImpl implements GoogleTimeZoneService {
     @Override
     public GoogleTimeZoneData getTimeZone(double latitude, double longitude)
     {
-        // TODO Input validation
+        double validLatitude = getValidatedLatitude(latitude);
+        double validLongitude = getValidatedLongitude(longitude);
 
-        log.trace(">>> GET Time Zone for latitude/longitude: {}/{}", latitude, longitude);
+        log.trace(">>> GET Time Zone for latitude/longitude: {}/{}", validLatitude, validLongitude);
         return restTemplate.getForObject(
             ENDPOINT_TEMPLATE__GET_TIMEZONE,
             GoogleTimeZoneData.class,
-            latitude, // TODO Consider encoding here
+            latitude,
             longitude,
             Instant.now().getEpochSecond(),
             apiKey);
