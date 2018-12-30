@@ -1,6 +1,5 @@
 package matt.project.weather;
 
-import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.client.RestTemplateBuilder;
@@ -14,7 +13,6 @@ import static matt.project.weather.LatitudeLongitude.getValidatedLongitude;
 
 @Service
 @Slf4j
-@ToString
 public class GoogleTimeZoneServiceImpl implements GoogleTimeZoneService {
 
     private final RestTemplate restTemplate;
