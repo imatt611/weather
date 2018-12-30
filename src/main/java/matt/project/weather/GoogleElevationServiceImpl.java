@@ -1,6 +1,5 @@
 package matt.project.weather;
 
-import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.client.RestTemplateBuilder;
@@ -9,7 +8,6 @@ import org.springframework.web.client.RestTemplate;
 
 @Service
 @Slf4j
-@ToString
 public class GoogleElevationServiceImpl implements GoogleElevationService {
 
     private final RestTemplate restTemplate;
