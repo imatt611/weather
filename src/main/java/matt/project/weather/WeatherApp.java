@@ -14,6 +14,7 @@ public class WeatherApp implements ApplicationRunner {
     // TODO Consider refactor to constructor injection
     @Autowired private OpenWeatherService weatherService;
     @Autowired private GoogleTimeZoneService timeZoneService;
+    @Autowired private GoogleElevationService elevationService;
 
     @SuppressWarnings("StaticMethodOnlyUsedInOneClass")
     public static void main(String[] args)
@@ -30,13 +31,16 @@ public class WeatherApp implements ApplicationRunner {
             Double latitude = weatherData.getCoordinates().get("lat"); // TODO Simplify
             Double longitude = weatherData.getCoordinates().get("lon"); // TODO Simplify
 
+            // TODO Make this async
             GoogleTimeZoneData timeZoneData = timeZoneService.getTimeZone(latitude, longitude);
+            GoogleElevationData elevationData = elevationService.getElevation(latitude, longitude);
 
             String weatherDescription = String.format(
-                "At the location %s, the temperature is %f, the timezone is %s, and the elevation is $ELEVATION.",
+                "At the location %s, the temperature is %f, the timezone is %s, and the elevation is %f.",
                 weatherData.getName(),
                 weatherData.getMain().get("temp"), // TODO Simplify
-                timeZoneData.getTimeZoneName());
+                timeZoneData.getTimeZoneName(),
+                elevationData.getElevation());
 
             System.out.println(weatherDescription);
         }

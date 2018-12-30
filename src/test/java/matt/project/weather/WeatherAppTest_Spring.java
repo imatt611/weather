@@ -53,10 +53,11 @@ public class WeatherAppTest_Spring {
         WeatherApp.main(new String[]{"80301"});
         // TODO Improve test incrementally by replacing ".*" elements in pattern
         Pattern weatherDescriptionPattern = Pattern.compile(
-            String.format("At the location %s, the temperature is %f, the timezone is %s, and the elevation is .*\\.",
+            String.format("At the location %s, the temperature is %f, the timezone is %s, and the elevation is %f\\.",
                           TestConfig.CITY_NAME,
                           TestConfig.TEMP,
-                          TestConfig.TIMEZONE_NAME));
+                          TestConfig.TIMEZONE_NAME,
+                          TestConfig.ELEVATION));
 
         assertThat(weatherDescriptionPattern.matcher(outContent.toString()).find(), is(true));
     }
@@ -64,10 +65,11 @@ public class WeatherAppTest_Spring {
     @TestConfiguration
     private static class TestConfig {
 
+        static final Double ELEVATION = 1500.3784;
         static final String TIMEZONE_NAME = "Mountain Daylight Time";
         static final String CITY_NAME = "Boulder";
         static final double TEMP = 75.2;
-        private static final Double LATITUDE = 1.0;
+        private static final Double LATITUDE = 1.0; // TODO May not need to be constant
         private static final Double LONGITUDE = 1.0;
 
         TestConfig()
@@ -82,11 +84,11 @@ public class WeatherAppTest_Spring {
             OpenWeatherData openWeatherData = new OpenWeatherData();
             openWeatherData.setName(CITY_NAME);
             Map<String, Double> weatherDataMain = new HashMap<>(1);
-            weatherDataMain.put("temp", TEMP);
+            weatherDataMain.put("temp", TEMP); // TODO? Constant for keys
             openWeatherData.setMain(weatherDataMain);
             Map<String, Double> weatherDataCoordinates = new HashMap<>(2);
-            weatherDataCoordinates.put("lat", LATITUDE);
-            weatherDataCoordinates.put("lon", LONGITUDE);
+            weatherDataCoordinates.put("lat", LATITUDE); // TODO? Constant for keys
+            weatherDataCoordinates.put("lon", LONGITUDE); // TODO? Constant for keys
             openWeatherData.setCoordinates(weatherDataCoordinates);
             when(mockRestTemplate.getForObject(any(), any(), any(), any())).thenReturn(openWeatherData);
             return new OpenWeatherServiceImpl(mockRestTemplate);
@@ -102,6 +104,18 @@ public class WeatherAppTest_Spring {
             when(mockRestTemplate.getForObject(any(), any(), any(), any(), any(), any())).thenReturn(
                 timeZoneData); // TODO This is absurd. Use Map Impl instead for easier testing
             return new GoogleTimeZoneServiceImpl(mockRestTemplate);
+        }
+
+        @Bean
+        @Primary
+        static GoogleElevationService googleElevationService()
+        {
+            RestTemplate mockRestTemplate = mock(RestTemplate.class);
+            GoogleElevationData elevationData = new GoogleElevationData();
+            elevationData.setElevation(ELEVATION);
+            when(mockRestTemplate.getForObject(any(), any(), any(), any(), any())).thenReturn(
+                elevationData); // TODO This is absurd. Use Map Impl instead for easier testing
+            return new GoogleElevationServiceImpl(mockRestTemplate);
         }
     }
 }
