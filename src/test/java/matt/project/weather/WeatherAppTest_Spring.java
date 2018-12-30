@@ -53,9 +53,10 @@ public class WeatherAppTest_Spring {
         WeatherApp.main(new String[]{"80301"});
         // TODO Improve test incrementally by replacing ".*" elements in pattern
         Pattern weatherDescriptionPattern = Pattern.compile(
-            String.format("At the location %s, the temperature is %f, the timezone is .*, and the elevation is .*\\.",
-                          TestConfig.TEST_CONFIG_CITY_NAME,
-                          TestConfig.TEST_CONFIG_TEMP));
+            String.format("At the location %s, the temperature is %f, the timezone is %s, and the elevation is .*\\.",
+                          TestConfig.CITY_NAME,
+                          TestConfig.TEMP,
+                          TestConfig.TIMEZONE_NAME));
 
         assertThat(weatherDescriptionPattern.matcher(outContent.toString()).find(), is(true));
     }
@@ -63,8 +64,11 @@ public class WeatherAppTest_Spring {
     @TestConfiguration
     private static class TestConfig {
 
-        static final String TEST_CONFIG_CITY_NAME = "Boulder";
-        static final double TEST_CONFIG_TEMP = 75.2;
+        static final String TIMEZONE_NAME = "Mountain Daylight Time";
+        static final String CITY_NAME = "Boulder";
+        static final double TEMP = 75.2;
+        private static final Double LATITUDE = 1.0;
+        private static final Double LONGITUDE = 1.0;
 
         TestConfig()
         {
@@ -76,12 +80,28 @@ public class WeatherAppTest_Spring {
         {
             RestTemplate mockRestTemplate = mock(RestTemplate.class);
             OpenWeatherData openWeatherData = new OpenWeatherData();
-            openWeatherData.setName(TEST_CONFIG_CITY_NAME);
+            openWeatherData.setName(CITY_NAME);
             Map<String, Double> weatherDataMain = new HashMap<>(1);
-            weatherDataMain.put("temp", TEST_CONFIG_TEMP);
+            weatherDataMain.put("temp", TEMP);
             openWeatherData.setMain(weatherDataMain);
+            Map<String, Double> weatherDataCoordinates = new HashMap<>(2);
+            weatherDataCoordinates.put("lat", LATITUDE);
+            weatherDataCoordinates.put("lon", LONGITUDE);
+            openWeatherData.setCoordinates(weatherDataCoordinates);
             when(mockRestTemplate.getForObject(any(), any(), any(), any())).thenReturn(openWeatherData);
             return new OpenWeatherServiceImpl(mockRestTemplate);
+        }
+
+        @Bean
+        @Primary
+        static GoogleTimeZoneService googleTimeZoneService()
+        {
+            RestTemplate mockRestTemplate = mock(RestTemplate.class);
+            GoogleTimeZoneData timeZoneData = new GoogleTimeZoneData();
+            timeZoneData.setTimeZoneName(TIMEZONE_NAME);
+            when(mockRestTemplate.getForObject(any(), any(), any(), any(), any(), any())).thenReturn(
+                timeZoneData); // TODO This is absurd. Use Map Impl instead for easier testing
+            return new GoogleTimeZoneServiceImpl(mockRestTemplate);
         }
     }
 }

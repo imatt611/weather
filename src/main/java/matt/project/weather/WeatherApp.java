@@ -11,7 +11,9 @@ import org.springframework.context.annotation.PropertySource;
 @PropertySource("classpath:keys.properties")
 public class WeatherApp implements ApplicationRunner {
 
-    @Autowired OpenWeatherService weatherService;
+    // TODO Consider refactor to constructor injection
+    @Autowired private OpenWeatherService weatherService;
+    @Autowired private GoogleTimeZoneService timeZoneService;
 
     @SuppressWarnings("StaticMethodOnlyUsedInOneClass")
     public static void main(String[] args)
@@ -22,15 +24,19 @@ public class WeatherApp implements ApplicationRunner {
     @Override
     public void run(ApplicationArguments args)
     {
+        // TODO Clearer args handling
         if (0 < args.getSourceArgs().length) {
-            System.out.println(args.getSourceArgs()[0]);
-            // TODO Clearer args handling
             OpenWeatherData weatherData = weatherService.getWeather(args.getSourceArgs()[0]);
+            Double latitude = weatherData.getCoordinates().get("lat"); // TODO Simplify
+            Double longitude = weatherData.getCoordinates().get("lon"); // TODO Simplify
+
+            GoogleTimeZoneData timeZoneData = timeZoneService.getTimeZone(latitude, longitude);
 
             String weatherDescription = String.format(
-                "At the location %s, the temperature is %f, the timezone is $TIMEZONE, and the elevation is $ELEVATION.",
+                "At the location %s, the temperature is %f, the timezone is %s, and the elevation is $ELEVATION.",
                 weatherData.getName(),
-                weatherData.getMain().get("temp")); // TODO Simplify
+                weatherData.getMain().get("temp"), // TODO Simplify
+                timeZoneData.getTimeZoneName());
 
             System.out.println(weatherDescription);
         }
