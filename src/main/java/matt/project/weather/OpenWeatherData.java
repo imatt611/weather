@@ -16,4 +16,19 @@ class OpenWeatherData {
     private Map<String, Double> main;
 
     private String name;
+
+    Double getLatitude()
+    {
+        return coordinates.get("lat");
+    }
+
+    Double getLongitude()
+    {
+        return coordinates.get("lon");
+    }
+
+    Double getTemperature()
+    {
+        return main.get("temp");
+    }
 }

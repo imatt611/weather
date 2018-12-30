@@ -7,6 +7,10 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.PropertySource;
 
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.atomic.AtomicReference;
+
 @SpringBootApplication
 @PropertySource("classpath:keys.properties")
 public class WeatherApp implements ApplicationRunner {
@@ -23,24 +27,30 @@ public class WeatherApp implements ApplicationRunner {
     }
 
     @Override
-    public void run(ApplicationArguments args)
+    public void run(ApplicationArguments args) throws ExecutionException, InterruptedException
     {
         // TODO Clearer args handling
         if (0 < args.getSourceArgs().length) {
             OpenWeatherData weatherData = weatherService.getWeather(args.getSourceArgs()[0]);
-            Double latitude = weatherData.getCoordinates().get("lat"); // TODO Simplify
-            Double longitude = weatherData.getCoordinates().get("lon"); // TODO Simplify
+            Double latitude = weatherData.getLatitude();
+            Double longitude = weatherData.getLongitude();
 
-            // TODO Make this async
-            GoogleTimeZoneData timeZoneData = timeZoneService.getTimeZone(latitude, longitude);
-            GoogleElevationData elevationData = elevationService.getElevation(latitude, longitude);
+            AtomicReference<GoogleTimeZoneData> timeZoneData = new AtomicReference<>(new GoogleTimeZoneData());
+            AtomicReference<GoogleElevationData> elevationData = new AtomicReference<>(new GoogleElevationData());
+
+            CompletableFuture<Void> timeZoneFuture = CompletableFuture.runAsync(
+                () -> timeZoneData.set(timeZoneService.getTimeZone(latitude, longitude)));
+            CompletableFuture<Void> elevationFuture = CompletableFuture.runAsync(
+                () -> elevationData.set(elevationService.getElevation(latitude, longitude)));
+
+            CompletableFuture.allOf(timeZoneFuture, elevationFuture).get();
 
             String weatherDescription = String.format(
                 "At the location %s, the temperature is %f, the timezone is %s, and the elevation is %f.",
                 weatherData.getName(),
-                weatherData.getMain().get("temp"), // TODO Simplify
-                timeZoneData.getTimeZoneName(),
-                elevationData.getElevation());
+                weatherData.getTemperature(),
+                timeZoneData.get().getTimeZoneName(),
+                elevationData.get().getElevation());
 
             System.out.println(weatherDescription);
         }
