@@ -26,7 +26,7 @@ import static org.springframework.test.web.client.response.MockRestResponseCreat
 
 public class OpenWeatherTest_Unit {
 
-    private static final String TEST_RESPONSE_OPEN_WEATHER_JSON = "/testResponse_openWeather.json";
+    static final String TEST_RESPONSE_OPEN_WEATHER_JSON = "/testResponse_openWeather.json"; // TODO Move
     private static final String VALID_TEST_ZIP_CODE = "97210";
     private static final OpenWeatherService openWeatherService = new OpenWeatherServiceImpl(mock(RestTemplate.class));
 
