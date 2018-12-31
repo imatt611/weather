@@ -11,5 +11,5 @@ public interface GoogleTimeZoneService {
      * @param longitude a longitude {@code <=180} and {@code >=-180}
      * @return Time Zone information at the location represented by the {@code (latitude, longitude)} tuple
      */
-    GoogleTimeZoneData getTimeZone(double latitude, double longitude);
+    GoogleTimeZoneData retrieveTimeZone(double latitude, double longitude);
 }

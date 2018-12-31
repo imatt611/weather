@@ -21,7 +21,7 @@ public class GoogleElevationTest_Integration {
     @Test
     public void retrievesElevationDataFromGoogle()
     {
-        GoogleElevationData elevationData = googleElevationService.getElevation(45.52, -122.67);
+        GoogleElevationData elevationData = googleElevationService.retrieveElevation(45.52, -122.67);
 
         log.info("Retrieved Elevation Data:\n\n{}\n", elevationData);
 

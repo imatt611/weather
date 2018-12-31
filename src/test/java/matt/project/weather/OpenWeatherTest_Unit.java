@@ -36,32 +36,32 @@ public class OpenWeatherTest_Unit {
     @Test(expected = IllegalArgumentException.class)
     public void refusesNegativeZipCode() throws IllegalArgumentException
     {
-        openWeatherService.getWeather("-97209");
+        openWeatherService.retrieveWeather("-97209");
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void refusesTooFewDigits() throws IllegalArgumentException
     {
-        openWeatherService.getWeather("972");
+        openWeatherService.retrieveWeather("972");
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void refusesTooManyDigits() throws IllegalArgumentException
     {
-        openWeatherService.getWeather("972103009");
+        openWeatherService.retrieveWeather("972103009");
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void refusesNonDigits() throws IllegalArgumentException
     {
-        openWeatherService.getWeather("972g8");
+        openWeatherService.retrieveWeather("972g8");
     }
 
     @SuppressWarnings("JUnitTestMethodWithNoAssertions") // no throw passes test
     @Test
     public void acceptsValidArgument()
     {
-        openWeatherService.getWeather(VALID_TEST_ZIP_CODE);
+        openWeatherService.retrieveWeather(VALID_TEST_ZIP_CODE);
     }
 
     @Test
@@ -109,7 +109,7 @@ public class OpenWeatherTest_Unit {
             .andRespond(withSuccess(testDataJsonString, MediaType.APPLICATION_JSON));
 
         // when
-        OpenWeatherData mockData = localTestOpenWeatherService.getWeather(VALID_TEST_ZIP_CODE);
+        OpenWeatherData mockData = localTestOpenWeatherService.retrieveWeather(VALID_TEST_ZIP_CODE);
 
         mockServer.verify();
         assertThat(mockData, instanceOf(OpenWeatherData.class));

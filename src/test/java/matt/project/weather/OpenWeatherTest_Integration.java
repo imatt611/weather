@@ -27,7 +27,7 @@ public class OpenWeatherTest_Integration {
     @Test
     public void retrievesWeatherDataFromOpenWeather()
     {
-        OpenWeatherData openWeatherData = openWeatherService.getWeather("97211");
+        OpenWeatherData openWeatherData = openWeatherService.retrieveWeather("97211");
 
         log.info("Retrieved Weather Data:\n\n{}\n", openWeatherData);
 

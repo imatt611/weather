@@ -48,7 +48,7 @@ class OpenWeatherServiceImpl implements OpenWeatherService {
     }
 
     @Override
-    public OpenWeatherData getWeather(String zipCode)
+    public OpenWeatherData retrieveWeather(String zipCode)
     {
         String validZipCode = getValidatedZipCode(zipCode);
 
