@@ -64,6 +64,17 @@ public class WeatherAppTest_Spring {
         assertThat(weatherDescriptionPattern.matcher(outContent.toString()).find(), is(true));
     }
 
+    @Test
+    public void outputsMessageForMissingArgument()
+    {
+        // Must trigger #main from test to ensure it feeds System#out into the stream under test
+        WeatherApp.main(new String[]{});
+        Pattern missingArgumentMessagePattern = Pattern.compile(
+            "Provide a 5-digit ZIP Code as an argument to receive information about the area\\.");
+
+        assertThat(missingArgumentMessagePattern.matcher(outContent.toString()).find(), is(true));
+    }
+
     @TestConfiguration
     private static class TestConfig {
 

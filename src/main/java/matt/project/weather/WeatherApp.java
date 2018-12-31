@@ -36,7 +36,6 @@ public class WeatherApp implements ApplicationRunner {
     @Override
     public void run(ApplicationArguments args) throws ExecutionException, InterruptedException
     {
-        // TODO Clearer args handling
         if (0 < args.getSourceArgs().length) {
             String zipCodeArg = args.getSourceArgs()[0];
             OpenWeatherData weatherData = weatherService.retrieveWeather(zipCodeArg);
@@ -57,6 +56,8 @@ public class WeatherApp implements ApplicationRunner {
                         elevationData.getElevation()));
 
             System.out.println(weatherDescriptionFuture.get());
+        } else {
+            System.out.println("Provide a 5-digit ZIP Code as an argument to receive information about the area.");
         }
     }
 }
