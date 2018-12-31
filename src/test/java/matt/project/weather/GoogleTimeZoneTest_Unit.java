@@ -36,32 +36,32 @@ public class GoogleTimeZoneTest_Unit {
     @Test(expected = IllegalArgumentException.class)
     public void refusesLatitudeOver90() throws IllegalArgumentException
     {
-        timeZoneService.getTimeZone(90.000000000001, 45.0);
+        timeZoneService.retrieveTimeZone(90.000000000001, 45.0);
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void refusesLatitudeUnderNegative90() throws IllegalArgumentException
     {
-        timeZoneService.getTimeZone(-90.000000000001, 45.0);
+        timeZoneService.retrieveTimeZone(-90.000000000001, 45.0);
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void refusesLongitudeOver180() throws IllegalArgumentException
     {
-        timeZoneService.getTimeZone(45.0, 180.00001);
+        timeZoneService.retrieveTimeZone(45.0, 180.00001);
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void refusesLongitudeUnderNegative180() throws IllegalArgumentException
     {
-        timeZoneService.getTimeZone(-45.0, -180.00001);
+        timeZoneService.retrieveTimeZone(-45.0, -180.00001);
     }
 
     @SuppressWarnings("JUnitTestMethodWithNoAssertions") // no throw passes test
     @Test
     public void acceptsValidArguments()
     {
-        timeZoneService.getTimeZone(45.0, 99.5);
+        timeZoneService.retrieveTimeZone(45.0, 99.5);
     }
 
     @Test
@@ -111,7 +111,7 @@ public class GoogleTimeZoneTest_Unit {
 
         // when
         GoogleTimeZoneData mockData = localTestGoogleTimeZoneService
-            .getTimeZone(testLatLongTuple.get("lat"), testLatLongTuple.get("lon"));
+            .retrieveTimeZone(testLatLongTuple.get("lat"), testLatLongTuple.get("lon"));
 
         mockServer.verify();
         assertThat(mockData, instanceOf(GoogleTimeZoneData.class));

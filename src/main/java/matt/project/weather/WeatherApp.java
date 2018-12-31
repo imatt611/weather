@@ -25,7 +25,8 @@ public class WeatherApp implements ApplicationRunner {
         SpringApplication.run(WeatherApp.class, args);
     }
 
-    private static String buildWeatherDescription(String cityName, Double temperature, String timeZoneName, Double elevation)
+    private static String buildWeatherDescription(
+        String cityName, Double temperature, String timeZoneName, Double elevation)
     {
         return String.format(
             "At the location %s, the temperature is %f, the timezone is %s, and the elevation is %f.",
@@ -38,14 +39,14 @@ public class WeatherApp implements ApplicationRunner {
         // TODO Clearer args handling
         if (0 < args.getSourceArgs().length) {
             String zipCodeArg = args.getSourceArgs()[0];
-            OpenWeatherData weatherData = weatherService.getWeather(zipCodeArg);
+            OpenWeatherData weatherData = weatherService.retrieveWeather(zipCodeArg);
             Double latitude = weatherData.getLatitude();
             Double longitude = weatherData.getLongitude();
 
             CompletableFuture<GoogleTimeZoneData> timeZoneFuture = CompletableFuture.supplyAsync(
-                () -> timeZoneService.getTimeZone(latitude, longitude));
+                () -> timeZoneService.retrieveTimeZone(latitude, longitude));
             CompletableFuture<GoogleElevationData> elevationFuture = CompletableFuture.supplyAsync(
-                () -> elevationService.getElevation(latitude, longitude));
+                () -> elevationService.retrieveElevation(latitude, longitude));
 
             CompletableFuture<String> weatherDescriptionFuture = timeZoneFuture
                 .thenCombineAsync(elevationFuture, (timeZoneData, elevationData) ->

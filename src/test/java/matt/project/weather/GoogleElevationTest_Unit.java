@@ -33,32 +33,32 @@ public class GoogleElevationTest_Unit {
     @Test(expected = IllegalArgumentException.class)
     public void refusesLatitudeOver90() throws IllegalArgumentException
     {
-        elevationService.getElevation(90.000000000001, 45.0);
+        elevationService.retrieveElevation(90.000000000001, 45.0);
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void refusesLatitudeUnderNegative90() throws IllegalArgumentException
     {
-        elevationService.getElevation(-90.000000000001, 45.0);
+        elevationService.retrieveElevation(-90.000000000001, 45.0);
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void refusesLongitudeOver180() throws IllegalArgumentException
     {
-        elevationService.getElevation(45.0, 180.00001);
+        elevationService.retrieveElevation(45.0, 180.00001);
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void refusesLongitudeUnderNegative180() throws IllegalArgumentException
     {
-        elevationService.getElevation(-45.0, -180.00001);
+        elevationService.retrieveElevation(-45.0, -180.00001);
     }
 
     @SuppressWarnings("JUnitTestMethodWithNoAssertions") // no throw passes test
     @Test
     public void acceptsValidArguments()
     {
-        elevationService.getElevation(45.0, 99.5);
+        elevationService.retrieveElevation(45.0, 99.5);
     }
 
     @Test
@@ -99,7 +99,7 @@ public class GoogleElevationTest_Unit {
 
         // when
         GoogleElevationData mockData = localTestGoogleElevationService
-            .getElevation(testLatLongTuple.get("lat"), testLatLongTuple.get("lon"));
+            .retrieveElevation(testLatLongTuple.get("lat"), testLatLongTuple.get("lon"));
 
         mockServer.verify();
         assertThat(mockData, instanceOf(GoogleElevationData.class));

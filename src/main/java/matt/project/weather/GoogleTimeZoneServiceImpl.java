@@ -31,7 +31,7 @@ public class GoogleTimeZoneServiceImpl implements GoogleTimeZoneService {
     }
 
     @Override
-    public GoogleTimeZoneData getTimeZone(double latitude, double longitude)
+    public GoogleTimeZoneData retrieveTimeZone(double latitude, double longitude)
     {
         double validLatitude = getValidatedLatitude(latitude);
         double validLongitude = getValidatedLongitude(longitude);

@@ -12,5 +12,5 @@ public interface OpenWeatherService {
      * @throws IllegalArgumentException if the Zip Code is not exactly 5 Integer-parseable digits
      * @see <a href="https://openweathermap.org/current#zip">OpenWeatherMap Zip Code API</a>
      */
-    OpenWeatherData getWeather(String zipCode);
+    OpenWeatherData retrieveWeather(String zipCode);
 }
