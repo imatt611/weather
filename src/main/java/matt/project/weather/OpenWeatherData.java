@@ -10,6 +10,10 @@ import java.util.Map;
 @Data
 class OpenWeatherData {
 
+    static final String KEY_MAIN_TEMP = "temp";
+    static final String KEY_COORD_LAT = "lat";
+    static final String KEY_COORD_LON = "lon";
+
     @JsonProperty("coord")
     private Map<String, Double> coordinates;
 
@@ -19,16 +23,16 @@ class OpenWeatherData {
 
     Double getLatitude()
     {
-        return coordinates.get("lat");
+        return coordinates.get(KEY_COORD_LAT);
     }
 
     Double getLongitude()
     {
-        return coordinates.get("lon");
+        return coordinates.get(KEY_COORD_LON);
     }
 
     Double getTemperature()
     {
-        return main.get("temp");
+        return main.get(KEY_MAIN_TEMP);
     }
 }

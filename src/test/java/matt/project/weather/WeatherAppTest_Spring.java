@@ -17,6 +17,9 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Pattern;
 
+import static matt.project.weather.OpenWeatherData.KEY_COORD_LAT;
+import static matt.project.weather.OpenWeatherData.KEY_COORD_LON;
+import static matt.project.weather.OpenWeatherData.KEY_MAIN_TEMP;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.ArgumentMatchers.any;
@@ -51,7 +54,6 @@ public class WeatherAppTest_Spring {
     {
         // Must trigger #main from test to ensure it feeds System#out into the stream under test
         WeatherApp.main(new String[]{"80301"});
-        // TODO Improve test incrementally by replacing ".*" elements in pattern
         Pattern weatherDescriptionPattern = Pattern.compile(
             String.format("At the location %s, the temperature is %f, the timezone is %s, and the elevation is %f\\.",
                           TestConfig.CITY_NAME,
@@ -69,8 +71,6 @@ public class WeatherAppTest_Spring {
         static final String TIMEZONE_NAME = "Mountain Daylight Time";
         static final String CITY_NAME = "Boulder";
         static final double TEMP = 75.2;
-        private static final Double LATITUDE = 1.0; // TODO May not need to be constant
-        private static final Double LONGITUDE = 1.0;
 
         TestConfig()
         {
@@ -84,11 +84,11 @@ public class WeatherAppTest_Spring {
             OpenWeatherData openWeatherData = new OpenWeatherData();
             openWeatherData.setName(CITY_NAME);
             Map<String, Double> weatherDataMain = new HashMap<>(1);
-            weatherDataMain.put("temp", TEMP); // TODO? Constant for keys
+            weatherDataMain.put(KEY_MAIN_TEMP, TEMP);
             openWeatherData.setMain(weatherDataMain);
             Map<String, Double> weatherDataCoordinates = new HashMap<>(2);
-            weatherDataCoordinates.put("lat", LATITUDE); // TODO? Constant for keys
-            weatherDataCoordinates.put("lon", LONGITUDE); // TODO? Constant for keys
+            weatherDataCoordinates.put(KEY_COORD_LAT, 1.0);
+            weatherDataCoordinates.put(KEY_COORD_LON, 1.0);
             openWeatherData.setCoordinates(weatherDataCoordinates);
             when(mockRestTemplate.getForObject(any(), any(), any(), any())).thenReturn(openWeatherData);
             return new OpenWeatherServiceImpl(mockRestTemplate);
