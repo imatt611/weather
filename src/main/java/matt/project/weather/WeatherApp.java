@@ -36,9 +36,15 @@ public class WeatherApp implements ApplicationRunner {
     @Override
     public void run(ApplicationArguments args) throws ExecutionException, InterruptedException
     {
-        // TODO Clearer args handling
-        if (0 < args.getSourceArgs().length) {
-            String zipCodeArg = args.getSourceArgs()[0];
+        String[] sourceArgs = args.getSourceArgs();
+        if (1 < sourceArgs.length) {
+            System.out.println(
+                String.format("Extra arguments provided. The first, %s, will be used as the ZIP Code argument.",
+                              sourceArgs[0]));
+        }
+
+        if (0 < sourceArgs.length) {
+            String zipCodeArg = sourceArgs[0];
             OpenWeatherData weatherData = weatherService.retrieveWeather(zipCodeArg);
             Double latitude = weatherData.getLatitude();
             Double longitude = weatherData.getLongitude();
@@ -57,6 +63,8 @@ public class WeatherApp implements ApplicationRunner {
                         elevationData.getElevation()));
 
             System.out.println(weatherDescriptionFuture.get());
+        } else {
+            System.out.println("Provide a 5-digit ZIP Code as an argument to receive information about the area.");
         }
     }
 }
