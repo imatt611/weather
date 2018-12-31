@@ -102,7 +102,7 @@ public class WeatherAppTest_Spring {
             GoogleTimeZoneData timeZoneData = new GoogleTimeZoneData();
             timeZoneData.setTimeZoneName(TIMEZONE_NAME);
             when(mockRestTemplate.getForObject(any(), any(), any(), any(), any(), any())).thenReturn(
-                timeZoneData); // TODO This is absurd. Use Map Impl instead for easier testing
+                timeZoneData); // TODO This is absurd. Use Map Impl instead for easier testing OR consider injecting providers, not just Impls (see TODO in WeatherApp)
             return new GoogleTimeZoneServiceImpl(mockRestTemplate);
         }
 
@@ -114,7 +114,7 @@ public class WeatherAppTest_Spring {
             GoogleElevationData elevationData = new GoogleElevationData();
             elevationData.setElevation(ELEVATION);
             when(mockRestTemplate.getForObject(any(), any(), any(), any(), any())).thenReturn(
-                elevationData); // TODO This is absurd. Use Map Impl instead for easier testing
+                elevationData); // TODO This is absurd. Use Map Impl instead for easier testing OR consider injecting providers, not just Impls (see TODO in WeatherApp)
             return new GoogleElevationServiceImpl(mockRestTemplate);
         }
     }
