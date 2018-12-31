@@ -8,6 +8,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.PropertySource;
 
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
 
 @SpringBootApplication
 @PropertySource("classpath:keys.properties")
@@ -34,12 +35,12 @@ public class WeatherApp implements ApplicationRunner {
     }
 
     @Override
-    public void run(ApplicationArguments args)
+    public void run(ApplicationArguments args) throws ExecutionException, InterruptedException
     {
         // TODO Clearer args handling
         if (0 < args.getSourceArgs().length) {
-            // Starter, if necessary
-            OpenWeatherData weatherData = weatherService.getWeather(args.getSourceArgs()[0]);
+            String zipCodeArg = args.getSourceArgs()[0];
+            OpenWeatherData weatherData = weatherService.getWeather(zipCodeArg);
             Double latitude = weatherData.getLatitude();
             Double longitude = weatherData.getLongitude();
 
@@ -52,80 +53,8 @@ public class WeatherApp implements ApplicationRunner {
                 outputWeatherDescription(weatherData.getName(),
                                          weatherData.getTemperature(),
                                          timeZoneData.getTimeZoneName(),
-                                         elevationData.getElevation()));
-
-
-            //            CompletableFuture.supplyAsync(() -> weatherService.getWeather(args.getSourceArgs()[0]))
-            //                .thenApplyAsync(weatherData -> {
-            //                    Double latitude = weatherData.getLatitude();
-            //                    Double longitude = weatherData.getLongitude();
-            //
-            //                    CompletableFuture.supplyAsync(() -> timeZoneService.getTimeZone(latitude, longitude));
-            //                    CompletableFuture.supplyAsync(() -> elevationService.getElevation(latitude, longitude));
-            //                });
-
-
-            // Idea:
-            //            String original = "Message";
-            //            CompletableFuture<String> cf = CompletableFuture.completedFuture(original).thenApply(
-            //                s -> delayedUpperCase(s))
-            //                .thenCompose(upper -> CompletableFuture.completedFuture(original).thenApply(s -> delayedLowerCase(s))
-            //                    .thenApply(s -> upper + s));
-            //            assertEquals("MESSAGEmessage", cf.join());
-
-            // Idea impl (uses starter):
-            // Works only in debug mode? Something async ain't right
-            //            CompletableFuture.supplyAsync(() -> timeZoneService.getTimeZone(latitude, longitude))
-            //                .thenCombineAsync(
-            //                    CompletableFuture.supplyAsync(() -> elevationService.getElevation(latitude, longitude)),
-            //                    (timeZoneData, elevationData) -> {
-            //                        outputWeatherDescription(weatherData.getName(), weatherData.getTemperature(),
-            //                                                 timeZoneData.getTimeZoneName(), elevationData.getElevation());
-            //                        return null;
-            //                    });
-            //                .thenComposeAsync(openWeatherData -> )
-            //                .thenApplyAsync(openWeatherData -> timeZoneService.getTimeZone(openWeatherData.getLatitude(), openWeatherData.getLongitude()))
-            //                .thenAcceptBothAsync() // Description
-
-            // Idea:
-            //            String original = "Message";
-            //            CompletableFuture<String> cf = CompletableFuture.completedFuture(original).thenApply(
-            //                s -> delayedUpperCase(s))
-            //                .thenCompose(upper -> CompletableFuture.completedFuture(original).thenApply(s -> delayedLowerCase(s))
-            //                    .thenApply(s -> upper + s));
-            //            assertEquals("MESSAGEmessage", cf.join());
-
-            // Idea impl (uses starter):
-            // Works only in debug mode? Something async ain't right
-            //            CompletableFuture.completedFuture(weatherData)
-            //                .thenApplyAsync(OpenWeatherData::getLatitude)
-            //                .thenComposeAsync(lat -> CompletableFuture.completedFuture(weatherData)
-            //                    .thenApplyAsync(OpenWeatherData::getLongitude)
-            //                    .thenApplyAsync(lon -> CompletableFuture.supplyAsync(() -> timeZoneService.getTimeZone(lat, lon))
-            //                        .thenCombineAsync( CompletableFuture.supplyAsync(() -> elevationService.getElevation(lat, lon)),
-            //                            (timeZoneData, elevationData) -> {
-            //                                outputWeatherDescription(weatherData.getName(),
-            //                                                     weatherData.getTemperature(),
-            //                                                     timeZoneData.getTimeZoneName(),
-            //                                                     elevationData.getElevation());
-            //                            return null;
-            //                        })
-            //                    )
-            //                );
-
-            // Works, but is rudimentary (uses starter):
-            //            AtomicReference<GoogleTimeZoneData> timeZoneData = new AtomicReference<>(new GoogleTimeZoneData());
-            //            AtomicReference<GoogleElevationData> elevationData = new AtomicReference<>(new GoogleElevationData());
-            //
-            //            CompletableFuture<Void> timeZoneFuture = CompletableFuture.runAsync(
-            //                () -> timeZoneData.set(timeZoneService.getTimeZone(latitude, longitude)));
-            //            CompletableFuture<Void> elevationFuture = CompletableFuture.runAsync(
-            //                () -> elevationData.set(elevationService.getElevation(latitude, longitude)));
-            //
-            //            CompletableFuture.allOf(timeZoneFuture, elevationFuture).get();
-
-            //            outputWeatherDescription(weatherData.getName(), weatherData.getTemperature(),
-            //                                     timeZoneData.get().getTimeZoneName(), elevationData.get().getElevation());
+                                         elevationData.getElevation()))
+                .get();
         }
     }
 }
