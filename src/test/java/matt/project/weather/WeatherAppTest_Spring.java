@@ -75,6 +75,19 @@ public class WeatherAppTest_Spring {
         assertThat(missingArgumentMessagePattern.matcher(outContent.toString()).find(), is(true));
     }
 
+    @Test
+    public void outputsMessageForExtraArguments()
+    {
+        String firstArg = "12345";
+        // Must trigger #main from test to ensure it feeds System#out into the stream under test
+        WeatherApp.main(new String[]{firstArg, "54321"});
+        Pattern missingArgumentMessagePattern = Pattern.compile(
+            String.format("Extra arguments provided\\. The first, %s, will be used as the ZIP Code argument\\.",
+                          firstArg));
+
+        assertThat(missingArgumentMessagePattern.matcher(outContent.toString()).find(), is(true));
+    }
+
     @TestConfiguration
     private static class TestConfig {
 
