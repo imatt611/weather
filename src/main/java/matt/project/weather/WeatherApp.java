@@ -25,13 +25,11 @@ public class WeatherApp implements ApplicationRunner {
         SpringApplication.run(WeatherApp.class, args);
     }
 
-    private static void outputWeatherDescription(String cityName, Double temperature, String timeZoneName, Double elevation)
+    private static String buildWeatherDescription(String cityName, Double temperature, String timeZoneName, Double elevation)
     {
-        String weatherDescription = String.format(
+        return String.format(
             "At the location %s, the temperature is %f, the timezone is %s, and the elevation is %f.",
             cityName, temperature, timeZoneName, elevation);
-
-        System.out.println(weatherDescription);
     }
 
     @Override
@@ -49,12 +47,15 @@ public class WeatherApp implements ApplicationRunner {
             CompletableFuture<GoogleElevationData> elevationFuture = CompletableFuture.supplyAsync(
                 () -> elevationService.getElevation(latitude, longitude));
 
-            timeZoneFuture.thenAcceptBoth(elevationFuture, (timeZoneData, elevationData) ->
-                outputWeatherDescription(weatherData.getName(),
-                                         weatherData.getTemperature(),
-                                         timeZoneData.getTimeZoneName(),
-                                         elevationData.getElevation()))
-                .get();
+            CompletableFuture<String> weatherDescriptionFuture = timeZoneFuture
+                .thenCombineAsync(elevationFuture, (timeZoneData, elevationData) ->
+                    buildWeatherDescription(
+                        weatherData.getName(),
+                        weatherData.getTemperature(),
+                        timeZoneData.getTimeZoneName(),
+                        elevationData.getElevation()));
+
+            System.out.println(weatherDescriptionFuture.get());
         }
     }
 }
