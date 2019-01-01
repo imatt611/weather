@@ -10,19 +10,22 @@ import org.springframework.web.client.RestTemplate;
 @Slf4j
 class OpenWeatherServiceImpl implements OpenWeatherService {
 
-    private final RestTemplate restTemplate;
+    private final OpenWeatherDataProvider<String, String, String, OpenWeatherData> openWeatherDataProvider;
 
     @Value(PROP_REF__API_KEY_OPEN_WEATHER)
     private String apiKey;
 
     OpenWeatherServiceImpl()
     {
-        restTemplate = new RestTemplateBuilder().rootUri(ROOT_URI).build();
+        RestTemplate restTemplate = new RestTemplateBuilder().rootUri(WEATHER_ROOT_URI).build();
+        openWeatherDataProvider = (endpointTemplate, zipCode, key) -> restTemplate
+            .getForObject(endpointTemplate, OpenWeatherData.class, zipCode, key);
     }
 
-    OpenWeatherServiceImpl(RestTemplate template)
+    OpenWeatherServiceImpl(
+        OpenWeatherDataProvider<String, String, String, OpenWeatherData> weatherDataProvider)
     {
-        restTemplate = template;
+        openWeatherDataProvider = weatherDataProvider;
     }
 
     /**
@@ -53,10 +56,7 @@ class OpenWeatherServiceImpl implements OpenWeatherService {
         String validZipCode = getValidatedZipCode(zipCode);
 
         log.trace(">>> GET Weather for zipCode: {}", validZipCode);
-        return restTemplate.getForObject(
-            GET_WEATHER_ENDPOINT_TEMPLATE,
-            OpenWeatherData.class,
-            validZipCode,
-            apiKey);
+        // TODO Remove 2nd arg from interface; add to Javadoc somewhere
+        return openWeatherDataProvider.apply(GET_WEATHER_QUERY_TEMPLATE, validZipCode, apiKey);
     }
 }

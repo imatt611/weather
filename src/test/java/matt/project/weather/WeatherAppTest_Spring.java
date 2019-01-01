@@ -115,7 +115,7 @@ public class WeatherAppTest_Spring {
             weatherDataCoordinates.put(KEY_COORD_LON, 1.0);
             openWeatherData.setCoordinates(weatherDataCoordinates);
             when(mockRestTemplate.getForObject(any(), any(), any(), any())).thenReturn(openWeatherData);
-            return new OpenWeatherServiceImpl(mockRestTemplate);
+            return new OpenWeatherServiceImpl((endpointTemplate, zipCode, apiKey) -> new OpenWeatherData());
         }
 
         @Bean

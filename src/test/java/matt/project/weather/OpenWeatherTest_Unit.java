@@ -3,35 +3,31 @@ package matt.project.weather;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Test;
 import org.springframework.boot.web.client.RestTemplateBuilder;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.MediaType;
-import org.springframework.test.web.client.MockRestServiceServer;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.util.UriTemplateHandler;
 
+import java.net.URI;
 import java.net.URL;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.function.Function;
 
 import static matt.project.weather.OpenWeatherData.KEY_COORD_LAT;
 import static matt.project.weather.OpenWeatherData.KEY_COORD_LON;
 import static matt.project.weather.OpenWeatherData.KEY_MAIN_TEMP;
-import static matt.project.weather.OpenWeatherService.GET_WEATHER_ENDPOINT_TEMPLATE;
-import static matt.project.weather.OpenWeatherService.ROOT_URI;
+import static matt.project.weather.OpenWeatherService.GET_WEATHER_QUERY_TEMPLATE;
+import static matt.project.weather.OpenWeatherService.WEATHER_ROOT_URI;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.Matchers.instanceOf;
-import static org.mockito.Mockito.mock;
-import static org.springframework.test.web.client.match.MockRestRequestMatchers.method;
-import static org.springframework.test.web.client.match.MockRestRequestMatchers.requestToUriTemplate;
-import static org.springframework.test.web.client.response.MockRestResponseCreators.withSuccess;
+import static org.hamcrest.Matchers.startsWith;
 
 public class OpenWeatherTest_Unit {
 
     static final String TEST_RESPONSE_OPEN_WEATHER_JSON = "/testResponse_openWeather.json"; // TODO Move
     private static final String VALID_TEST_ZIP_CODE = "97210";
-    private static final OpenWeatherService openWeatherService = new OpenWeatherServiceImpl(mock(RestTemplate.class));
+    private static final OpenWeatherService openWeatherService = new OpenWeatherServiceImpl(
+        ((endpointTemplate, zipCode, apiKey) -> new OpenWeatherData()));
 
     @Test(expected = IllegalArgumentException.class)
     public void refusesNegativeZipCode() throws IllegalArgumentException
@@ -91,28 +87,34 @@ public class OpenWeatherTest_Unit {
     }
 
     @Test
-    public void usesKnownOpenWeatherApiContractAndReturnsOpenWeatherData() throws Exception
+    public void usesKnownOpenWeatherApiContract()
     {
         // given
-        RestTemplate restTemplate = new RestTemplateBuilder().rootUri(ROOT_URI).build();
-        OpenWeatherService localTestOpenWeatherService = new OpenWeatherServiceImpl(restTemplate);
+        RestTemplate restTemplate = new RestTemplateBuilder().rootUri(WEATHER_ROOT_URI).build();
+        UriTemplateHandler uriTemplateHandler = restTemplate.getUriTemplateHandler();
+        Function<String, URI> endpointExpander = endpoint ->
+            uriTemplateHandler.expand(endpoint, VALID_TEST_ZIP_CODE, "");
 
-        MockRestServiceServer mockServer = MockRestServiceServer.createServer(restTemplate);
+        OpenWeatherService localTestOpenWeatherService = new OpenWeatherServiceImpl(
+            (endpointTemplate, zipCode, apiKey) -> {
+                // expect
+                // TODO Is this any more meaningful than testing mocks of assumed implementation? This assumes an identical UriTemplateHandler
+                assertThat(endpointExpander.apply(endpointTemplate),
+                           equalTo(endpointExpander.apply(WEATHER_ROOT_URI + GET_WEATHER_QUERY_TEMPLATE)));
 
-        String testDataJsonString = String.join("", Files.readAllLines(
-            Paths.get(getClass().getResource(TEST_RESPONSE_OPEN_WEATHER_JSON).getPath())));
+                // TODO Would this be any more meaningful? Probably not with constants, as it's then just testing that the same constant is referenced
+                assertThat(endpointTemplate, equalTo(WEATHER_ROOT_URI + GET_WEATHER_QUERY_TEMPLATE));
 
-        // expect
-        mockServer
-            .expect(requestToUriTemplate(ROOT_URI + GET_WEATHER_ENDPOINT_TEMPLATE, VALID_TEST_ZIP_CODE, ""))
-            .andExpect(method(HttpMethod.GET))
-            .andRespond(withSuccess(testDataJsonString, MediaType.APPLICATION_JSON));
+                // TODO Is this what it takes? Is it worth it?
+                // Example: "https://api.openweathermap.org/data/2.5/weather?zip={zipCode}&appid={apiKey}"
+                assertThat(endpointTemplate, startsWith(WEATHER_ROOT_URI));
+                assertThat(endpointTemplate, containsString("zip="));
+                assertThat(endpointTemplate, containsString("appid="));
+                return new OpenWeatherData();
+            });
 
         // when
-        OpenWeatherData mockData = localTestOpenWeatherService.retrieveWeather(VALID_TEST_ZIP_CODE);
-
-        mockServer.verify();
-        assertThat(mockData, instanceOf(OpenWeatherData.class));
+        localTestOpenWeatherService.retrieveWeather(VALID_TEST_ZIP_CODE);
     }
 
 }
