@@ -11,6 +11,12 @@ import org.springframework.context.annotation.PropertySource;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 
+
+// TODO Create *Data Interfaces, place them and service interfaces on top level with WeatherApp, then establish
+//  feature-based packages below there. WeatherApp shouldn't have to see anything in the packages beneath, so fewer
+//  things would need to be made public. *Data interfaces could drop the "Google" and "OpenWeather" knowledge.
+
+
 @SpringBootApplication
 @PropertySource("classpath:keys.properties")
 @RequiredArgsConstructor(onConstructor_ = {@Autowired})
