@@ -1,5 +1,6 @@
 package matt.project.weather;
 
+import matt.project.weather.elevation.GoogleElevationConfig;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -8,6 +9,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Primary;
+import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.web.client.RestTemplate;
 
@@ -31,6 +33,7 @@ import static org.mockito.Mockito.when;
 @SuppressWarnings("resource")
 @RunWith(SpringRunner.class)
 @SpringBootTest
+@ContextConfiguration(classes = GoogleElevationConfig.class)
 public class WeatherAppTest_Spring {
     private final ByteArrayOutputStream outContent = new ByteArrayOutputStream();
     private final ByteArrayOutputStream errContent = new ByteArrayOutputStream();
@@ -61,7 +64,7 @@ public class WeatherAppTest_Spring {
                           TestConfig.CITY_NAME,
                           TestConfig.TEMP,
                           TestConfig.TIMEZONE_NAME,
-                          TestConfig.ELEVATION));
+                          GoogleElevationConfig.ELEVATION));
 
         assertThat(weatherDescriptionPattern.matcher(outContent.toString()).find(), is(true));
     }
@@ -93,7 +96,6 @@ public class WeatherAppTest_Spring {
     @TestConfiguration
     private static class TestConfig {
 
-        static final Double ELEVATION = 1500.3784;
         static final String TIMEZONE_NAME = "Mountain Daylight Time";
         static final String CITY_NAME = "Boulder";
         static final double TEMP = 75.2;
@@ -137,17 +139,5 @@ public class WeatherAppTest_Spring {
             return new GoogleTimeZoneServiceImpl(mockRestTemplate);
         }
 
-        @Bean
-        @Primary
-        static ElevationService googleElevationService()
-        {
-            ElevationData elevationData = new GoogleElevationData();
-            elevationData.setElevation(ELEVATION);
-
-            RestTemplate mockRestTemplate = mock(RestTemplate.class);
-            when(mockRestTemplate.getForObject(anyString(), any(), anyMap())).thenReturn(elevationData);
-
-            return new GoogleElevationServiceImpl(mockRestTemplate);
-        }
     }
 }

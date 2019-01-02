@@ -1,6 +1,8 @@
-package matt.project.weather;
+package matt.project.weather.elevation;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import matt.project.weather.ElevationData;
+import matt.project.weather.ElevationService;
 import org.junit.Test;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.http.HttpMethod;
