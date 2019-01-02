@@ -3,7 +3,9 @@ package matt.project.weather;
 public interface OpenWeatherService {
 
     String ROOT_URI = "https://api.openweathermap.org/data/2.5";
-    String GET_WEATHER_ENDPOINT_TEMPLATE = "/weather?zip={zipCode}&appid={apiKey}";
+    String GET_WEATHER_ENDPOINT_TEMPLATE = "/weather?zip={zipCode}&appid={apiKey}"; // TODO Constant-ize keys/vars
+    String TEMPLATE_VAR_NAME__ZIP_CODE = "zipCode";
+    String TEMPLATE_VAR_NAME__API_KEY = GoogleApiInfo.TEMPLATE_VAR_NAME__API_KEY;
     String PROP_REF__API_KEY_OPEN_WEATHER = "${api.key.openWeather}";
 
     /**
