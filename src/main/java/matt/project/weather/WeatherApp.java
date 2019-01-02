@@ -1,5 +1,6 @@
 package matt.project.weather;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
@@ -12,12 +13,12 @@ import java.util.concurrent.ExecutionException;
 
 @SpringBootApplication
 @PropertySource("classpath:keys.properties")
+@RequiredArgsConstructor(onConstructor_ = {@Autowired})
 public class WeatherApp implements ApplicationRunner {
 
-    // TODO Consider refactor to constructor injection (or, in order to avoid mocking known implementation in these Impls' tests, consider providers (functions) to be injected here (or into a [new] class that performs the work and isn't "the app" itself)
-    @Autowired private OpenWeatherService weatherService;
-    @Autowired private GoogleTimeZoneService timeZoneService;
-    @Autowired private GoogleElevationService elevationService;
+    private final OpenWeatherService weatherService;
+    private final GoogleTimeZoneService timeZoneService;
+    private final GoogleElevationService elevationService;
 
     @SuppressWarnings("StaticMethodOnlyUsedInOneClass")
     public static void main(String[] args)
