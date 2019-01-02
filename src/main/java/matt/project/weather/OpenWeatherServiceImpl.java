@@ -56,8 +56,8 @@ class OpenWeatherServiceImpl implements OpenWeatherService {
         String validZipCode = getValidatedZipCode(zipCode);
 
         Map<String, Object> variablesMap = new HashMap<>(2);
-        variablesMap.put("zipCode", validZipCode);
-        variablesMap.put("apiKey", apiKey);
+        variablesMap.put(TEMPLATE_VAR_NAME__ZIP_CODE, validZipCode);
+        variablesMap.put(TEMPLATE_VAR_NAME__API_KEY, apiKey);
 
         log.trace(">>> GET Weather for zipCode: {}", validZipCode);
         return restTemplate.getForObject(GET_WEATHER_ENDPOINT_TEMPLATE, OpenWeatherData.class, variablesMap);

@@ -14,8 +14,8 @@ import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Map;
 
-import static matt.project.weather.GoogleElevationService.ENDPOINT_TEMPLATE__GET_ELEVATION;
-import static matt.project.weather.GoogleElevationService.ROOT_URI__ELEVATION;
+import static matt.project.weather.GoogleApiInfo.ENDPOINT_TEMPLATE__GET_ELEVATION;
+import static matt.project.weather.GoogleApiInfo.ROOT_URI;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.instanceOf;
 import static org.junit.Assert.assertThat;
@@ -76,7 +76,7 @@ public class GoogleElevationTest_Unit {
     public void usesKnownGoogleElevationApiContractAndReturnsGoogleElevationData() throws Exception
     {
         // given
-        RestTemplate restTemplate = new RestTemplateBuilder().rootUri(ROOT_URI__ELEVATION).build();
+        RestTemplate restTemplate = new RestTemplateBuilder().rootUri(ROOT_URI).build();
         GoogleElevationService localTestGoogleElevationService = new GoogleElevationServiceImpl(restTemplate);
 
         MockRestServiceServer mockServer = MockRestServiceServer.createServer(restTemplate);
@@ -90,7 +90,7 @@ public class GoogleElevationTest_Unit {
 
         // expect
         mockServer
-            .expect(requestToUriTemplate(ROOT_URI__ELEVATION + ENDPOINT_TEMPLATE__GET_ELEVATION,
+            .expect(requestToUriTemplate(ROOT_URI + ENDPOINT_TEMPLATE__GET_ELEVATION,
                                          testLatLongTuple.get("lat"),
                                          testLatLongTuple.get("lon"),
                                          ""))

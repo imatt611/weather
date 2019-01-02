@@ -16,8 +16,8 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
-import static matt.project.weather.GoogleTimeZoneService.ENDPOINT_TEMPLATE__GET_TIMEZONE;
-import static matt.project.weather.GoogleTimeZoneService.ROOT_URI__TIMEZONE;
+import static matt.project.weather.GoogleApiInfo.ENDPOINT_TEMPLATE__GET_TIMEZONE;
+import static matt.project.weather.GoogleApiInfo.ROOT_URI;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.instanceOf;
 import static org.hamcrest.Matchers.stringContainsInOrder;
@@ -83,7 +83,7 @@ public class GoogleTimeZoneTest_Unit {
     public void usesKnownGoogleTimeZoneApiContractAndReturnsGoogleTimeZoneData() throws Exception
     {
         // given
-        RestTemplate restTemplate = new RestTemplateBuilder().rootUri(ROOT_URI__TIMEZONE).build();
+        RestTemplate restTemplate = new RestTemplateBuilder().rootUri(ROOT_URI).build();
         GoogleTimeZoneService localTestGoogleTimeZoneService = new GoogleTimeZoneServiceImpl(restTemplate);
 
         MockRestServiceServer mockServer = MockRestServiceServer.createServer(restTemplate);
@@ -99,7 +99,7 @@ public class GoogleTimeZoneTest_Unit {
         mockServer
             .expect(requestTo(
                 stringContainsInOrder(
-                    Arrays.asList(ROOT_URI__TIMEZONE,
+                    Arrays.asList(ROOT_URI,
                                   ENDPOINT_TEMPLATE__GET_TIMEZONE
                                       .substring(0, ENDPOINT_TEMPLATE__GET_TIMEZONE.indexOf('{')),
                                   testLatLongTuple.get("lat").toString(),
