@@ -7,6 +7,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import java.time.Instant;
+import java.util.HashMap;
+import java.util.Map;
 
 import static matt.project.weather.LatitudeLongitude.getValidatedLatitude;
 import static matt.project.weather.LatitudeLongitude.getValidatedLongitude;
@@ -36,13 +38,13 @@ public class GoogleTimeZoneServiceImpl implements GoogleTimeZoneService {
         double validLatitude = getValidatedLatitude(latitude);
         double validLongitude = getValidatedLongitude(longitude);
 
+        Map<String, Object> variablesMap = new HashMap<>(2);
+        variablesMap.put("latitude", validLatitude);
+        variablesMap.put("longitude", validLongitude);
+        variablesMap.put("timestamp", Instant.now().getEpochSecond());
+        variablesMap.put("apiKey", apiKey);
+
         log.trace(">>> GET Time Zone for latitude/longitude: {}/{}", validLatitude, validLongitude);
-        return restTemplate.getForObject(
-            ENDPOINT_TEMPLATE__GET_TIMEZONE,
-            GoogleTimeZoneData.class,
-            latitude,
-            longitude,
-            Instant.now().getEpochSecond(),
-            apiKey);
+        return restTemplate.getForObject(ENDPOINT_TEMPLATE__GET_TIMEZONE, GoogleTimeZoneData.class, variablesMap);
     }
 }

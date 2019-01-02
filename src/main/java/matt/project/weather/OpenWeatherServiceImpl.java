@@ -6,6 +6,9 @@ import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import java.util.HashMap;
+import java.util.Map;
+
 @Service
 @Slf4j
 class OpenWeatherServiceImpl implements OpenWeatherService {
@@ -52,11 +55,11 @@ class OpenWeatherServiceImpl implements OpenWeatherService {
     {
         String validZipCode = getValidatedZipCode(zipCode);
 
+        Map<String, Object> variablesMap = new HashMap<>(2);
+        variablesMap.put("zipCode", validZipCode);
+        variablesMap.put("apiKey", apiKey);
+
         log.trace(">>> GET Weather for zipCode: {}", validZipCode);
-        return restTemplate.getForObject(
-            GET_WEATHER_ENDPOINT_TEMPLATE,
-            OpenWeatherData.class,
-            validZipCode,
-            apiKey);
+        return restTemplate.getForObject(GET_WEATHER_ENDPOINT_TEMPLATE, OpenWeatherData.class, variablesMap);
     }
 }

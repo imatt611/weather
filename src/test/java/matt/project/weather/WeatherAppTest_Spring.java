@@ -23,6 +23,8 @@ import static matt.project.weather.OpenWeatherData.KEY_MAIN_TEMP;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyMap;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -104,17 +106,21 @@ public class WeatherAppTest_Spring {
         @Primary
         static OpenWeatherService openWeatherService()
         {
-            RestTemplate mockRestTemplate = mock(RestTemplate.class);
-            OpenWeatherData openWeatherData = new OpenWeatherData();
-            openWeatherData.setName(CITY_NAME);
             Map<String, Double> weatherDataMain = new HashMap<>(1);
             weatherDataMain.put(KEY_MAIN_TEMP, TEMP);
-            openWeatherData.setMain(weatherDataMain);
+
             Map<String, Double> weatherDataCoordinates = new HashMap<>(2);
             weatherDataCoordinates.put(KEY_COORD_LAT, 1.0);
             weatherDataCoordinates.put(KEY_COORD_LON, 1.0);
+
+            OpenWeatherData openWeatherData = new OpenWeatherData();
+            openWeatherData.setName(CITY_NAME);
+            openWeatherData.setMain(weatherDataMain);
             openWeatherData.setCoordinates(weatherDataCoordinates);
-            when(mockRestTemplate.getForObject(any(), any(), any(), any())).thenReturn(openWeatherData);
+
+            RestTemplate mockRestTemplate = mock(RestTemplate.class);
+            when(mockRestTemplate.getForObject(anyString(), any(), anyMap())).thenReturn(openWeatherData);
+
             return new OpenWeatherServiceImpl(mockRestTemplate);
         }
 
@@ -122,11 +128,12 @@ public class WeatherAppTest_Spring {
         @Primary
         static GoogleTimeZoneService googleTimeZoneService()
         {
-            RestTemplate mockRestTemplate = mock(RestTemplate.class);
             GoogleTimeZoneData timeZoneData = new GoogleTimeZoneData();
             timeZoneData.setTimeZoneName(TIMEZONE_NAME);
-            when(mockRestTemplate.getForObject(any(), any(), any(), any(), any(), any())).thenReturn(
-                timeZoneData); // TODO This is absurd. Use Map Impl instead for easier testing OR consider injecting providers, not just Impls (see TODO in WeatherApp)
+
+            RestTemplate mockRestTemplate = mock(RestTemplate.class);
+            when(mockRestTemplate.getForObject(anyString(), any(), anyMap())).thenReturn(timeZoneData);
+
             return new GoogleTimeZoneServiceImpl(mockRestTemplate);
         }
 
@@ -134,11 +141,12 @@ public class WeatherAppTest_Spring {
         @Primary
         static GoogleElevationService googleElevationService()
         {
-            RestTemplate mockRestTemplate = mock(RestTemplate.class);
             GoogleElevationData elevationData = new GoogleElevationData();
             elevationData.setElevation(ELEVATION);
-            when(mockRestTemplate.getForObject(any(), any(), any(), any(), any())).thenReturn(
-                elevationData); // TODO This is absurd. Use Map Impl instead for easier testing OR consider injecting providers, not just Impls (see TODO in WeatherApp)
+
+            RestTemplate mockRestTemplate = mock(RestTemplate.class);
+            when(mockRestTemplate.getForObject(anyString(), any(), anyMap())).thenReturn(elevationData);
+
             return new GoogleElevationServiceImpl(mockRestTemplate);
         }
     }
