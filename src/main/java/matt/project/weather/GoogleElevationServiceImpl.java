@@ -20,7 +20,7 @@ import static matt.project.weather.LatitudeLongitudeUtil.getValidatedLongitude;
 
 @Service
 @Slf4j
-public class GoogleElevationServiceImpl implements GoogleElevationService {
+public class GoogleElevationServiceImpl implements ElevationService {
 
     private final RestTemplate restTemplate;
 

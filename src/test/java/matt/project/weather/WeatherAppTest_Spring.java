@@ -139,7 +139,7 @@ public class WeatherAppTest_Spring {
 
         @Bean
         @Primary
-        static GoogleElevationService googleElevationService()
+        static ElevationService googleElevationService()
         {
             ElevationData elevationData = new GoogleElevationData();
             elevationData.setElevation(ELEVATION);

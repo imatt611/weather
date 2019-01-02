@@ -24,7 +24,7 @@ public class WeatherApp implements ApplicationRunner {
 
     private final OpenWeatherService weatherService;
     private final GoogleTimeZoneService timeZoneService;
-    private final GoogleElevationService elevationService;
+    private final ElevationService elevationService;
 
     @SuppressWarnings("StaticMethodOnlyUsedInOneClass")
     public static void main(String[] args)

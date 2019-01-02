@@ -1,6 +1,6 @@
 package matt.project.weather;
 
-public interface GoogleElevationService {
+public interface ElevationService {
 
     /**
      * @param latitude  a latitude {@code <=90} and {@code >=-90}

@@ -27,7 +27,7 @@ import static org.springframework.test.web.client.response.MockRestResponseCreat
 public class GoogleElevationTest_Unit {
 
     private static final String TEST_RESPONSE_GOOGLE_ELEVATION_JSON = "/testResponse_googleElevation.json";
-    private static final GoogleElevationService elevationService = new GoogleElevationServiceImpl(
+    private static final ElevationService elevationService = new GoogleElevationServiceImpl(
         mock(RestTemplate.class));
 
     @Test(expected = IllegalArgumentException.class)
@@ -77,7 +77,7 @@ public class GoogleElevationTest_Unit {
     {
         // given
         RestTemplate restTemplate = new RestTemplateBuilder().rootUri(ROOT_URI).build();
-        GoogleElevationService localTestGoogleElevationService = new GoogleElevationServiceImpl(restTemplate);
+        ElevationService localTestElevationService = new GoogleElevationServiceImpl(restTemplate);
 
         MockRestServiceServer mockServer = MockRestServiceServer.createServer(restTemplate);
 
@@ -98,7 +98,7 @@ public class GoogleElevationTest_Unit {
             .andRespond(withSuccess(testDataJsonString, MediaType.APPLICATION_JSON));
 
         // when
-        ElevationData mockData = localTestGoogleElevationService
+        ElevationData mockData = localTestElevationService
             .retrieveElevation(testLatLongTuple.get("lat"), testLatLongTuple.get("lon"));
 
         mockServer.verify();
