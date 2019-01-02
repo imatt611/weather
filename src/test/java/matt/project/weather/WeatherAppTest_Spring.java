@@ -1,36 +1,27 @@
 package matt.project.weather;
 
+import matt.project.weather.elevation.GoogleElevationConfig;
+import matt.project.weather.timezone.GoogleTimeZoneConfig;
+import matt.project.weather.weather.OpenWeatherConfig;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.context.TestConfiguration;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Primary;
+import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.web.client.RestTemplate;
 
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.regex.Pattern;
 
-import static matt.project.weather.OpenWeatherData.KEY_COORD_LAT;
-import static matt.project.weather.OpenWeatherData.KEY_COORD_LON;
-import static matt.project.weather.OpenWeatherData.KEY_MAIN_TEMP;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyMap;
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
 @SuppressWarnings("resource")
 @RunWith(SpringRunner.class)
 @SpringBootTest
+@ContextConfiguration(classes = GoogleElevationConfig.class)
 public class WeatherAppTest_Spring {
     private final ByteArrayOutputStream outContent = new ByteArrayOutputStream();
     private final ByteArrayOutputStream errContent = new ByteArrayOutputStream();
@@ -58,10 +49,10 @@ public class WeatherAppTest_Spring {
         WeatherApp.main(new String[]{"80301"});
         Pattern weatherDescriptionPattern = Pattern.compile(
             String.format("At the location %s, the temperature is %f, the timezone is %s, and the elevation is %f\\.",
-                          TestConfig.CITY_NAME,
-                          TestConfig.TEMP,
-                          TestConfig.TIMEZONE_NAME,
-                          TestConfig.ELEVATION));
+                          OpenWeatherConfig.CITY_NAME,
+                          OpenWeatherConfig.TEMP,
+                          GoogleTimeZoneConfig.TIMEZONE_NAME,
+                          GoogleElevationConfig.ELEVATION));
 
         assertThat(weatherDescriptionPattern.matcher(outContent.toString()).find(), is(true));
     }
@@ -88,66 +79,5 @@ public class WeatherAppTest_Spring {
                           firstArg));
 
         assertThat(missingArgumentMessagePattern.matcher(outContent.toString()).find(), is(true));
-    }
-
-    @TestConfiguration
-    private static class TestConfig {
-
-        static final Double ELEVATION = 1500.3784;
-        static final String TIMEZONE_NAME = "Mountain Daylight Time";
-        static final String CITY_NAME = "Boulder";
-        static final double TEMP = 75.2;
-
-        TestConfig()
-        {
-        }
-
-        @Bean
-        @Primary
-        static OpenWeatherService openWeatherService()
-        {
-            Map<String, Double> weatherDataMain = new HashMap<>(1);
-            weatherDataMain.put(KEY_MAIN_TEMP, TEMP);
-
-            Map<String, Double> weatherDataCoordinates = new HashMap<>(2);
-            weatherDataCoordinates.put(KEY_COORD_LAT, 1.0);
-            weatherDataCoordinates.put(KEY_COORD_LON, 1.0);
-
-            OpenWeatherData openWeatherData = new OpenWeatherData();
-            openWeatherData.setName(CITY_NAME);
-            openWeatherData.setMain(weatherDataMain);
-            openWeatherData.setCoordinates(weatherDataCoordinates);
-
-            RestTemplate mockRestTemplate = mock(RestTemplate.class);
-            when(mockRestTemplate.getForObject(anyString(), any(), anyMap())).thenReturn(openWeatherData);
-
-            return new OpenWeatherServiceImpl(mockRestTemplate);
-        }
-
-        @Bean
-        @Primary
-        static GoogleTimeZoneService googleTimeZoneService()
-        {
-            GoogleTimeZoneData timeZoneData = new GoogleTimeZoneData();
-            timeZoneData.setTimeZoneName(TIMEZONE_NAME);
-
-            RestTemplate mockRestTemplate = mock(RestTemplate.class);
-            when(mockRestTemplate.getForObject(anyString(), any(), anyMap())).thenReturn(timeZoneData);
-
-            return new GoogleTimeZoneServiceImpl(mockRestTemplate);
-        }
-
-        @Bean
-        @Primary
-        static GoogleElevationService googleElevationService()
-        {
-            GoogleElevationData elevationData = new GoogleElevationData();
-            elevationData.setElevation(ELEVATION);
-
-            RestTemplate mockRestTemplate = mock(RestTemplate.class);
-            when(mockRestTemplate.getForObject(anyString(), any(), anyMap())).thenReturn(elevationData);
-
-            return new GoogleElevationServiceImpl(mockRestTemplate);
-        }
     }
 }

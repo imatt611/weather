@@ -1,4 +1,4 @@
-package matt.project.weather;
+package matt.project.weather.elevation;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Test;
@@ -14,8 +14,8 @@ import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Map;
 
-import static matt.project.weather.GoogleApiInfo.ENDPOINT_TEMPLATE__GET_ELEVATION;
-import static matt.project.weather.GoogleApiInfo.ROOT_URI;
+import static matt.project.weather.util.GoogleApiConstants.ENDPOINT_TEMPLATE__GET_ELEVATION;
+import static matt.project.weather.util.GoogleApiConstants.ROOT_URI;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.instanceOf;
 import static org.junit.Assert.assertThat;
@@ -27,7 +27,7 @@ import static org.springframework.test.web.client.response.MockRestResponseCreat
 public class GoogleElevationTest_Unit {
 
     private static final String TEST_RESPONSE_GOOGLE_ELEVATION_JSON = "/testResponse_googleElevation.json";
-    private static final GoogleElevationService elevationService = new GoogleElevationServiceImpl(
+    private static final ElevationService elevationService = new GoogleElevationServiceImpl(
         mock(RestTemplate.class));
 
     @Test(expected = IllegalArgumentException.class)
@@ -67,7 +67,7 @@ public class GoogleElevationTest_Unit {
         ObjectMapper mapper = new ObjectMapper();
         URL src = getClass().getResource(TEST_RESPONSE_GOOGLE_ELEVATION_JSON);
 
-        GoogleElevationData elevationData = mapper.readValue(src, GoogleElevationData.class);
+        ElevationData elevationData = mapper.readValue(src, GoogleElevationData.class);
 
         assertThat(elevationData.getElevation(), equalTo(1608.637939453125));
     }
@@ -77,7 +77,7 @@ public class GoogleElevationTest_Unit {
     {
         // given
         RestTemplate restTemplate = new RestTemplateBuilder().rootUri(ROOT_URI).build();
-        GoogleElevationService localTestGoogleElevationService = new GoogleElevationServiceImpl(restTemplate);
+        ElevationService localTestElevationService = new GoogleElevationServiceImpl(restTemplate);
 
         MockRestServiceServer mockServer = MockRestServiceServer.createServer(restTemplate);
 
@@ -98,7 +98,7 @@ public class GoogleElevationTest_Unit {
             .andRespond(withSuccess(testDataJsonString, MediaType.APPLICATION_JSON));
 
         // when
-        GoogleElevationData mockData = localTestGoogleElevationService
+        ElevationData mockData = localTestElevationService
             .retrieveElevation(testLatLongTuple.get("lat"), testLatLongTuple.get("lon"));
 
         mockServer.verify();

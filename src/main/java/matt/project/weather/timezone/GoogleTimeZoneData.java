@@ -1,11 +1,11 @@
-package matt.project.weather;
+package matt.project.weather.timezone;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 @Data
-class GoogleTimeZoneData {
+class GoogleTimeZoneData implements TimeZoneData {
 
     private String timeZoneName;
 

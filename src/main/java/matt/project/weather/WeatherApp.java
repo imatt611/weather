@@ -1,6 +1,12 @@
 package matt.project.weather;
 
 import lombok.RequiredArgsConstructor;
+import matt.project.weather.elevation.ElevationData;
+import matt.project.weather.elevation.ElevationService;
+import matt.project.weather.timezone.TimeZoneData;
+import matt.project.weather.timezone.TimeZoneService;
+import matt.project.weather.weather.WeatherData;
+import matt.project.weather.weather.WeatherService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
@@ -11,14 +17,15 @@ import org.springframework.context.annotation.PropertySource;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 
+
 @SpringBootApplication
 @PropertySource("classpath:keys.properties")
 @RequiredArgsConstructor(onConstructor_ = {@Autowired})
 public class WeatherApp implements ApplicationRunner {
 
-    private final OpenWeatherService weatherService;
-    private final GoogleTimeZoneService timeZoneService;
-    private final GoogleElevationService elevationService;
+    private final WeatherService weatherService;
+    private final TimeZoneService timeZoneService;
+    private final ElevationService elevationService;
 
     @SuppressWarnings("StaticMethodOnlyUsedInOneClass")
     public static void main(String[] args)
@@ -46,13 +53,13 @@ public class WeatherApp implements ApplicationRunner {
 
         if (0 < sourceArgs.length) {
             String zipCodeArg = sourceArgs[0];
-            OpenWeatherData weatherData = weatherService.retrieveWeather(zipCodeArg);
+            WeatherData weatherData = weatherService.retrieveWeather(zipCodeArg);
             Double latitude = weatherData.getLatitude();
             Double longitude = weatherData.getLongitude();
 
-            CompletableFuture<GoogleTimeZoneData> timeZoneFuture = CompletableFuture.supplyAsync(
+            CompletableFuture<TimeZoneData> timeZoneFuture = CompletableFuture.supplyAsync(
                 () -> timeZoneService.retrieveTimeZone(latitude, longitude));
-            CompletableFuture<GoogleElevationData> elevationFuture = CompletableFuture.supplyAsync(
+            CompletableFuture<ElevationData> elevationFuture = CompletableFuture.supplyAsync(
                 () -> elevationService.retrieveElevation(latitude, longitude));
 
             CompletableFuture<String> weatherDescriptionFuture = timeZoneFuture

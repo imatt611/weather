@@ -1,4 +1,4 @@
-package matt.project.weather;
+package matt.project.weather.timezone;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Test;
@@ -16,8 +16,8 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
-import static matt.project.weather.GoogleApiInfo.ENDPOINT_TEMPLATE__GET_TIMEZONE;
-import static matt.project.weather.GoogleApiInfo.ROOT_URI;
+import static matt.project.weather.util.GoogleApiConstants.ENDPOINT_TEMPLATE__GET_TIMEZONE;
+import static matt.project.weather.util.GoogleApiConstants.ROOT_URI;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.instanceOf;
 import static org.hamcrest.Matchers.stringContainsInOrder;
@@ -30,7 +30,7 @@ import static org.springframework.test.web.client.response.MockRestResponseCreat
 public class GoogleTimeZoneTest_Unit {
 
     private static final String TEST_RESPONSE_GOOGLE_TIME_ZONE_JSON = "/testResponse_googleTimeZone.json";
-    private static final GoogleTimeZoneService timeZoneService = new GoogleTimeZoneServiceImpl(
+    private static final TimeZoneService timeZoneService = new GoogleTimeZoneServiceImpl(
         mock(RestTemplate.class));
 
     @Test(expected = IllegalArgumentException.class)
@@ -68,13 +68,13 @@ public class GoogleTimeZoneTest_Unit {
     public void deserializesResults() throws Exception
     {
         // expect
-        GoogleTimeZoneData expectedTimeZoneData = new GoogleTimeZoneData();
+        TimeZoneData expectedTimeZoneData = new GoogleTimeZoneData();
         expectedTimeZoneData.setTimeZoneName("Eastern Daylight Time");
 
         // when
         ObjectMapper mapper = new ObjectMapper();
         URL src = getClass().getResource(TEST_RESPONSE_GOOGLE_TIME_ZONE_JSON);
-        GoogleTimeZoneData timeZoneData = mapper.readValue(src, GoogleTimeZoneData.class);
+        TimeZoneData timeZoneData = mapper.readValue(src, GoogleTimeZoneData.class);
 
         assertThat(timeZoneData, equalTo(expectedTimeZoneData));
     }
@@ -84,7 +84,7 @@ public class GoogleTimeZoneTest_Unit {
     {
         // given
         RestTemplate restTemplate = new RestTemplateBuilder().rootUri(ROOT_URI).build();
-        GoogleTimeZoneService localTestGoogleTimeZoneService = new GoogleTimeZoneServiceImpl(restTemplate);
+        TimeZoneService localTestTimeZoneService = new GoogleTimeZoneServiceImpl(restTemplate);
 
         MockRestServiceServer mockServer = MockRestServiceServer.createServer(restTemplate);
 
@@ -105,12 +105,12 @@ public class GoogleTimeZoneTest_Unit {
                                   testLatLongTuple.get("lat").toString(),
                                   testLatLongTuple.get("lon").toString(),
                                   String.valueOf(Instant.now().getEpochSecond())
-                                      .substring(0, 6))))) // Close enough for unit test
+                                        .substring(0, 6))))) // Close enough for unit test
             .andExpect(method(HttpMethod.GET))
             .andRespond(withSuccess(testDataJsonString, MediaType.APPLICATION_JSON));
 
         // when
-        GoogleTimeZoneData mockData = localTestGoogleTimeZoneService
+        TimeZoneData mockData = localTestTimeZoneService
             .retrieveTimeZone(testLatLongTuple.get("lat"), testLatLongTuple.get("lon"));
 
         mockServer.verify();

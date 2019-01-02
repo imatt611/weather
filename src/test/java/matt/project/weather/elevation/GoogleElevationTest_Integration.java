@@ -1,4 +1,4 @@
-package matt.project.weather;
+package matt.project.weather.elevation;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -16,12 +16,12 @@ import static org.junit.Assert.assertThat;
 public class GoogleElevationTest_Integration {
 
     private final Logger log = LoggerFactory.getLogger(getClass());
-    @Autowired private GoogleElevationService googleElevationService;
+    @Autowired private GoogleElevationServiceImpl elevationService;
 
     @Test
     public void retrievesElevationDataFromGoogle()
     {
-        GoogleElevationData elevationData = googleElevationService.retrieveElevation(45.52, -122.67);
+        ElevationData elevationData = elevationService.retrieveElevation(45.52, -122.67);
 
         log.info("Retrieved Elevation Data:\n\n{}\n", elevationData);
 
