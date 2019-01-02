@@ -38,7 +38,7 @@ public class GoogleElevationServiceImpl implements GoogleElevationService {
     }
 
     @Override
-    public GoogleElevationData retrieveElevation(double latitude, double longitude)
+    public ElevationData retrieveElevation(double latitude, double longitude)
     {
         double validLatitude = getValidatedLatitude(latitude);
         double validLongitude = getValidatedLongitude(longitude);

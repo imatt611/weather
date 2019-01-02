@@ -58,7 +58,7 @@ public class WeatherApp implements ApplicationRunner {
 
             CompletableFuture<GoogleTimeZoneData> timeZoneFuture = CompletableFuture.supplyAsync(
                 () -> timeZoneService.retrieveTimeZone(latitude, longitude));
-            CompletableFuture<GoogleElevationData> elevationFuture = CompletableFuture.supplyAsync(
+            CompletableFuture<ElevationData> elevationFuture = CompletableFuture.supplyAsync(
                 () -> elevationService.retrieveElevation(latitude, longitude));
 
             CompletableFuture<String> weatherDescriptionFuture = timeZoneFuture

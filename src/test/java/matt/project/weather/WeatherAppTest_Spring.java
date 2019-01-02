@@ -141,7 +141,7 @@ public class WeatherAppTest_Spring {
         @Primary
         static GoogleElevationService googleElevationService()
         {
-            GoogleElevationData elevationData = new GoogleElevationData();
+            ElevationData elevationData = new GoogleElevationData();
             elevationData.setElevation(ELEVATION);
 
             RestTemplate mockRestTemplate = mock(RestTemplate.class);

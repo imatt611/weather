@@ -67,7 +67,7 @@ public class GoogleElevationTest_Unit {
         ObjectMapper mapper = new ObjectMapper();
         URL src = getClass().getResource(TEST_RESPONSE_GOOGLE_ELEVATION_JSON);
 
-        GoogleElevationData elevationData = mapper.readValue(src, GoogleElevationData.class);
+        ElevationData elevationData = mapper.readValue(src, GoogleElevationData.class);
 
         assertThat(elevationData.getElevation(), equalTo(1608.637939453125));
     }
@@ -98,7 +98,7 @@ public class GoogleElevationTest_Unit {
             .andRespond(withSuccess(testDataJsonString, MediaType.APPLICATION_JSON));
 
         // when
-        GoogleElevationData mockData = localTestGoogleElevationService
+        ElevationData mockData = localTestGoogleElevationService
             .retrieveElevation(testLatLongTuple.get("lat"), testLatLongTuple.get("lon"));
 
         mockServer.verify();
