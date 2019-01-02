@@ -141,11 +141,12 @@ public class WeatherAppTest_Spring {
         @Primary
         static GoogleElevationService googleElevationService()
         {
-            RestTemplate mockRestTemplate = mock(RestTemplate.class);
             GoogleElevationData elevationData = new GoogleElevationData();
             elevationData.setElevation(ELEVATION);
-            when(mockRestTemplate.getForObject(any(), any(), any(), any(), any())).thenReturn(
-                elevationData); // TODO This is absurd. Use Map Impl instead for easier testing OR consider injecting providers, not just Impls (see TODO in WeatherApp)
+
+            RestTemplate mockRestTemplate = mock(RestTemplate.class);
+            when(mockRestTemplate.getForObject(anyString(), any(), anyMap())).thenReturn(elevationData);
+
             return new GoogleElevationServiceImpl(mockRestTemplate);
         }
     }
