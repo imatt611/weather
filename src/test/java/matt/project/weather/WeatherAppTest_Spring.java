@@ -23,6 +23,8 @@ import static matt.project.weather.OpenWeatherData.KEY_MAIN_TEMP;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyMap;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -104,17 +106,21 @@ public class WeatherAppTest_Spring {
         @Primary
         static OpenWeatherService openWeatherService()
         {
-            RestTemplate mockRestTemplate = mock(RestTemplate.class);
-            OpenWeatherData openWeatherData = new OpenWeatherData();
-            openWeatherData.setName(CITY_NAME);
             Map<String, Double> weatherDataMain = new HashMap<>(1);
             weatherDataMain.put(KEY_MAIN_TEMP, TEMP);
-            openWeatherData.setMain(weatherDataMain);
+
             Map<String, Double> weatherDataCoordinates = new HashMap<>(2);
             weatherDataCoordinates.put(KEY_COORD_LAT, 1.0);
             weatherDataCoordinates.put(KEY_COORD_LON, 1.0);
+
+            OpenWeatherData openWeatherData = new OpenWeatherData();
+            openWeatherData.setName(CITY_NAME);
+            openWeatherData.setMain(weatherDataMain);
             openWeatherData.setCoordinates(weatherDataCoordinates);
-            when(mockRestTemplate.getForObject(any(), any(), any(), any())).thenReturn(openWeatherData);
+
+            RestTemplate mockRestTemplate = mock(RestTemplate.class);
+            when(mockRestTemplate.getForObject(anyString(), any(), anyMap())).thenReturn(openWeatherData);
+
             return new OpenWeatherServiceImpl(mockRestTemplate);
         }
 
