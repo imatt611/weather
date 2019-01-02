@@ -128,11 +128,12 @@ public class WeatherAppTest_Spring {
         @Primary
         static GoogleTimeZoneService googleTimeZoneService()
         {
-            RestTemplate mockRestTemplate = mock(RestTemplate.class);
             GoogleTimeZoneData timeZoneData = new GoogleTimeZoneData();
             timeZoneData.setTimeZoneName(TIMEZONE_NAME);
-            when(mockRestTemplate.getForObject(any(), any(), any(), any(), any(), any())).thenReturn(
-                timeZoneData); // TODO This is absurd. Use Map Impl instead for easier testing OR consider injecting providers, not just Impls (see TODO in WeatherApp)
+
+            RestTemplate mockRestTemplate = mock(RestTemplate.class);
+            when(mockRestTemplate.getForObject(anyString(), any(), anyMap())).thenReturn(timeZoneData);
+
             return new GoogleTimeZoneServiceImpl(mockRestTemplate);
         }
 
