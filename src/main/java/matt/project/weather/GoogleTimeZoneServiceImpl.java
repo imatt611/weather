@@ -45,7 +45,7 @@ public class GoogleTimeZoneServiceImpl implements GoogleTimeZoneService {
         double validLatitude = getValidatedLatitude(latitude);
         double validLongitude = getValidatedLongitude(longitude);
 
-        Map<String, Object> variablesMap = new HashMap<>(2);
+        Map<String, Object> variablesMap = new HashMap<>(4);
         variablesMap.put(TEMPLATE_VAR_NAME__LATITUDE, validLatitude);
         variablesMap.put(TEMPLATE_VAR_NAME__LONGITUDE, validLongitude);
         variablesMap.put(TEMPLATE_VAR_NAME__TIMESTAMP, Instant.now().getEpochSecond());

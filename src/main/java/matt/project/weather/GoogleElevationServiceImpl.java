@@ -15,6 +15,8 @@ import static matt.project.weather.GoogleApiInfo.ROOT_URI;
 import static matt.project.weather.GoogleApiInfo.TEMPLATE_VAR_NAME__API_KEY;
 import static matt.project.weather.GoogleApiInfo.TEMPLATE_VAR_NAME__LATITUDE;
 import static matt.project.weather.GoogleApiInfo.TEMPLATE_VAR_NAME__LONGITUDE;
+import static matt.project.weather.LatitudeLongitudeUtil.getValidatedLatitude;
+import static matt.project.weather.LatitudeLongitudeUtil.getValidatedLongitude;
 
 @Service
 @Slf4j
@@ -38,8 +40,8 @@ public class GoogleElevationServiceImpl implements GoogleElevationService {
     @Override
     public GoogleElevationData retrieveElevation(double latitude, double longitude)
     {
-        double validLatitude = LatitudeLongitudeUtil.getValidatedLatitude(latitude);
-        double validLongitude = LatitudeLongitudeUtil.getValidatedLongitude(longitude);
+        double validLatitude = getValidatedLatitude(latitude);
+        double validLongitude = getValidatedLongitude(longitude);
 
         Map<String, Object> variablesMap = new HashMap<>(2);
         variablesMap.put(TEMPLATE_VAR_NAME__LATITUDE, validLatitude);
