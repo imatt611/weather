@@ -1,5 +1,7 @@
-package matt.project.weather;
+package matt.project.weather.timezone;
 
+import matt.project.weather.TimeZoneData;
+import matt.project.weather.TimeZoneService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
@@ -16,12 +18,12 @@ import static org.junit.Assert.assertThat;
 public class GoogleTimeZoneTest_Integration {
 
     private final Logger log = LoggerFactory.getLogger(getClass());
-    @Autowired private GoogleTimeZoneService googleTimeZoneService;
+    @Autowired private TimeZoneService timeZoneService;
 
     @Test
     public void retrievesTimeZoneDataFromGoogle()
     {
-        GoogleTimeZoneData timeZoneData = googleTimeZoneService.retrieveTimeZone(45.52, -122.67);
+        TimeZoneData timeZoneData = timeZoneService.retrieveTimeZone(45.52, -122.67);
 
         log.info("Retrieved Time Zone Data:\n\n{}\n", timeZoneData);
 

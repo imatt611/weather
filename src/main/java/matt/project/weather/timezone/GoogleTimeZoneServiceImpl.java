@@ -1,6 +1,8 @@
-package matt.project.weather;
+package matt.project.weather.timezone;
 
 import lombok.extern.slf4j.Slf4j;
+import matt.project.weather.TimeZoneData;
+import matt.project.weather.TimeZoneService;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.stereotype.Service;
@@ -22,7 +24,7 @@ import static matt.project.weather.LatitudeLongitudeUtil.getValidatedLongitude;
 
 @Service
 @Slf4j
-public class GoogleTimeZoneServiceImpl implements GoogleTimeZoneService {
+public class GoogleTimeZoneServiceImpl implements TimeZoneService {
 
     private final RestTemplate restTemplate;
 
@@ -40,7 +42,7 @@ public class GoogleTimeZoneServiceImpl implements GoogleTimeZoneService {
     }
 
     @Override
-    public GoogleTimeZoneData retrieveTimeZone(double latitude, double longitude)
+    public TimeZoneData retrieveTimeZone(double latitude, double longitude)
     {
         double validLatitude = getValidatedLatitude(latitude);
         double validLongitude = getValidatedLongitude(longitude);

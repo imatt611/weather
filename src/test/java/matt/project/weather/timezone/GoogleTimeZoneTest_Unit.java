@@ -1,6 +1,8 @@
-package matt.project.weather;
+package matt.project.weather.timezone;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import matt.project.weather.TimeZoneData;
+import matt.project.weather.TimeZoneService;
 import org.junit.Test;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.http.HttpMethod;
@@ -30,7 +32,7 @@ import static org.springframework.test.web.client.response.MockRestResponseCreat
 public class GoogleTimeZoneTest_Unit {
 
     private static final String TEST_RESPONSE_GOOGLE_TIME_ZONE_JSON = "/testResponse_googleTimeZone.json";
-    private static final GoogleTimeZoneService timeZoneService = new GoogleTimeZoneServiceImpl(
+    private static final TimeZoneService timeZoneService = new GoogleTimeZoneServiceImpl(
         mock(RestTemplate.class));
 
     @Test(expected = IllegalArgumentException.class)
@@ -68,13 +70,13 @@ public class GoogleTimeZoneTest_Unit {
     public void deserializesResults() throws Exception
     {
         // expect
-        GoogleTimeZoneData expectedTimeZoneData = new GoogleTimeZoneData();
+        TimeZoneData expectedTimeZoneData = new GoogleTimeZoneData();
         expectedTimeZoneData.setTimeZoneName("Eastern Daylight Time");
 
         // when
         ObjectMapper mapper = new ObjectMapper();
         URL src = getClass().getResource(TEST_RESPONSE_GOOGLE_TIME_ZONE_JSON);
-        GoogleTimeZoneData timeZoneData = mapper.readValue(src, GoogleTimeZoneData.class);
+        TimeZoneData timeZoneData = mapper.readValue(src, GoogleTimeZoneData.class);
 
         assertThat(timeZoneData, equalTo(expectedTimeZoneData));
     }
@@ -84,7 +86,7 @@ public class GoogleTimeZoneTest_Unit {
     {
         // given
         RestTemplate restTemplate = new RestTemplateBuilder().rootUri(ROOT_URI).build();
-        GoogleTimeZoneService localTestGoogleTimeZoneService = new GoogleTimeZoneServiceImpl(restTemplate);
+        TimeZoneService localTestTimeZoneService = new GoogleTimeZoneServiceImpl(restTemplate);
 
         MockRestServiceServer mockServer = MockRestServiceServer.createServer(restTemplate);
 
@@ -110,7 +112,7 @@ public class GoogleTimeZoneTest_Unit {
             .andRespond(withSuccess(testDataJsonString, MediaType.APPLICATION_JSON));
 
         // when
-        GoogleTimeZoneData mockData = localTestGoogleTimeZoneService
+        TimeZoneData mockData = localTestTimeZoneService
             .retrieveTimeZone(testLatLongTuple.get("lat"), testLatLongTuple.get("lon"));
 
         mockServer.verify();

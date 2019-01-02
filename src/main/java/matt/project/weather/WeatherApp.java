@@ -23,7 +23,7 @@ import java.util.concurrent.ExecutionException;
 public class WeatherApp implements ApplicationRunner {
 
     private final OpenWeatherService weatherService;
-    private final GoogleTimeZoneService timeZoneService;
+    private final TimeZoneService timeZoneService;
     private final ElevationService elevationService;
 
     @SuppressWarnings("StaticMethodOnlyUsedInOneClass")
@@ -56,7 +56,7 @@ public class WeatherApp implements ApplicationRunner {
             Double latitude = weatherData.getLatitude();
             Double longitude = weatherData.getLongitude();
 
-            CompletableFuture<GoogleTimeZoneData> timeZoneFuture = CompletableFuture.supplyAsync(
+            CompletableFuture<TimeZoneData> timeZoneFuture = CompletableFuture.supplyAsync(
                 () -> timeZoneService.retrieveTimeZone(latitude, longitude));
             CompletableFuture<ElevationData> elevationFuture = CompletableFuture.supplyAsync(
                 () -> elevationService.retrieveElevation(latitude, longitude));

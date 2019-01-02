@@ -1,6 +1,7 @@
 package matt.project.weather;
 
 import matt.project.weather.elevation.GoogleElevationConfig;
+import matt.project.weather.timezone.GoogleTimeZoneConfig;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -63,7 +64,7 @@ public class WeatherAppTest_Spring {
             String.format("At the location %s, the temperature is %f, the timezone is %s, and the elevation is %f\\.",
                           TestConfig.CITY_NAME,
                           TestConfig.TEMP,
-                          TestConfig.TIMEZONE_NAME,
+                          GoogleTimeZoneConfig.TIMEZONE_NAME,
                           GoogleElevationConfig.ELEVATION));
 
         assertThat(weatherDescriptionPattern.matcher(outContent.toString()).find(), is(true));
@@ -96,7 +97,6 @@ public class WeatherAppTest_Spring {
     @TestConfiguration
     private static class TestConfig {
 
-        static final String TIMEZONE_NAME = "Mountain Daylight Time";
         static final String CITY_NAME = "Boulder";
         static final double TEMP = 75.2;
 
@@ -126,18 +126,6 @@ public class WeatherAppTest_Spring {
             return new OpenWeatherServiceImpl(mockRestTemplate);
         }
 
-        @Bean
-        @Primary
-        static GoogleTimeZoneService googleTimeZoneService()
-        {
-            GoogleTimeZoneData timeZoneData = new GoogleTimeZoneData();
-            timeZoneData.setTimeZoneName(TIMEZONE_NAME);
-
-            RestTemplate mockRestTemplate = mock(RestTemplate.class);
-            when(mockRestTemplate.getForObject(anyString(), any(), anyMap())).thenReturn(timeZoneData);
-
-            return new GoogleTimeZoneServiceImpl(mockRestTemplate);
-        }
 
     }
 }
