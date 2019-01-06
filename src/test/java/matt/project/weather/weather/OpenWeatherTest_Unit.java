@@ -1,8 +1,6 @@
 package matt.project.weather.weather;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import matt.project.weather.WeatherData;
-import matt.project.weather.WeatherService;
 import org.junit.Test;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.http.HttpMethod;

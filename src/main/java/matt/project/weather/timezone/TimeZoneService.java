@@ -1,4 +1,4 @@
-package matt.project.weather;
+package matt.project.weather.timezone;
 
 public interface TimeZoneService {
 

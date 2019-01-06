@@ -1,7 +1,5 @@
 package matt.project.weather.elevation;
 
-import matt.project.weather.ElevationData;
-import matt.project.weather.ElevationService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;

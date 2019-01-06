@@ -1,4 +1,4 @@
-package matt.project.weather;
+package matt.project.weather.weather;
 
 public interface WeatherData {
     Double getLatitude();

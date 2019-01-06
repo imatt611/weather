@@ -1,7 +1,5 @@
 package matt.project.weather.weather;
 
-import matt.project.weather.WeatherData;
-import matt.project.weather.WeatherService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;

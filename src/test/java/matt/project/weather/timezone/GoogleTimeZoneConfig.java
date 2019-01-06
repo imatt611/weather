@@ -1,7 +1,5 @@
 package matt.project.weather.timezone;
 
-import matt.project.weather.TimeZoneData;
-import matt.project.weather.TimeZoneService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;

@@ -1,8 +1,6 @@
 package matt.project.weather.timezone;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import matt.project.weather.TimeZoneData;
-import matt.project.weather.TimeZoneService;
 import org.junit.Test;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.http.HttpMethod;
@@ -107,7 +105,7 @@ public class GoogleTimeZoneTest_Unit {
                                   testLatLongTuple.get("lat").toString(),
                                   testLatLongTuple.get("lon").toString(),
                                   String.valueOf(Instant.now().getEpochSecond())
-                                      .substring(0, 6))))) // Close enough for unit test
+                                        .substring(0, 6))))) // Close enough for unit test
             .andExpect(method(HttpMethod.GET))
             .andRespond(withSuccess(testDataJsonString, MediaType.APPLICATION_JSON));
 

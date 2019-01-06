@@ -1,7 +1,5 @@
 package matt.project.weather.timezone;
 
-import matt.project.weather.TimeZoneData;
-import matt.project.weather.TimeZoneService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;

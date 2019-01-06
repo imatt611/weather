@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import lombok.Setter;
-import matt.project.weather.WeatherData;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -91,7 +90,6 @@ class OpenWeatherData implements WeatherData {
         if (!otherWeatherData.getName().equals(name)) return false;
         if (!otherWeatherData.getTemperature().equals(getTemperature())) return false;
         if (!otherWeatherData.getLatitude().equals(getLatitude())) return false;
-        if (!otherWeatherData.getLongitude().equals(getLongitude())) return false;
-        return true;
+        return otherWeatherData.getLongitude().equals(getLongitude());
     }
 }

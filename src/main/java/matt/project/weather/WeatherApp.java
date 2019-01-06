@@ -1,6 +1,12 @@
 package matt.project.weather;
 
 import lombok.RequiredArgsConstructor;
+import matt.project.weather.elevation.ElevationData;
+import matt.project.weather.elevation.ElevationService;
+import matt.project.weather.timezone.TimeZoneData;
+import matt.project.weather.timezone.TimeZoneService;
+import matt.project.weather.weather.WeatherData;
+import matt.project.weather.weather.WeatherService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
