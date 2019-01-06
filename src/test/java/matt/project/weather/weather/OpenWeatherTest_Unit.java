@@ -1,6 +1,8 @@
-package matt.project.weather;
+package matt.project.weather.weather;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import matt.project.weather.WeatherData;
+import matt.project.weather.WeatherService;
 import org.junit.Test;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.http.HttpMethod;
@@ -12,8 +14,8 @@ import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
-import static matt.project.weather.OpenWeatherService.GET_WEATHER_ENDPOINT_TEMPLATE;
-import static matt.project.weather.OpenWeatherService.ROOT_URI;
+import static matt.project.weather.weather.OpenWeatherServiceImpl.GET_WEATHER_ENDPOINT_TEMPLATE;
+import static matt.project.weather.weather.OpenWeatherServiceImpl.ROOT_URI;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.instanceOf;
@@ -26,37 +28,37 @@ public class OpenWeatherTest_Unit {
 
     private static final String TEST_RESPONSE_OPEN_WEATHER_JSON = "/testResponse_openWeather.json";
     private static final String VALID_TEST_ZIP_CODE = "97210";
-    private static final OpenWeatherService openWeatherService = new OpenWeatherServiceImpl(mock(RestTemplate.class));
+    private static final WeatherService WEATHER_SERVICE = new OpenWeatherServiceImpl(mock(RestTemplate.class));
 
     @Test(expected = IllegalArgumentException.class)
     public void refusesNegativeZipCode() throws IllegalArgumentException
     {
-        openWeatherService.retrieveWeather("-97209");
+        WEATHER_SERVICE.retrieveWeather("-97209");
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void refusesTooFewDigits() throws IllegalArgumentException
     {
-        openWeatherService.retrieveWeather("972");
+        WEATHER_SERVICE.retrieveWeather("972");
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void refusesTooManyDigits() throws IllegalArgumentException
     {
-        openWeatherService.retrieveWeather("972103009");
+        WEATHER_SERVICE.retrieveWeather("972103009");
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void refusesNonDigits() throws IllegalArgumentException
     {
-        openWeatherService.retrieveWeather("972g8");
+        WEATHER_SERVICE.retrieveWeather("972g8");
     }
 
     @SuppressWarnings("JUnitTestMethodWithNoAssertions") // no throw passes test
     @Test
     public void acceptsValidArgument()
     {
-        openWeatherService.retrieveWeather(VALID_TEST_ZIP_CODE);
+        WEATHER_SERVICE.retrieveWeather(VALID_TEST_ZIP_CODE);
     }
 
     @Test
@@ -82,7 +84,7 @@ public class OpenWeatherTest_Unit {
     {
         // given
         RestTemplate restTemplate = new RestTemplateBuilder().rootUri(ROOT_URI).build();
-        OpenWeatherService localTestOpenWeatherService = new OpenWeatherServiceImpl(restTemplate);
+        WeatherService localTestWeatherService = new OpenWeatherServiceImpl(restTemplate);
 
         MockRestServiceServer mockServer = MockRestServiceServer.createServer(restTemplate);
 
@@ -96,7 +98,7 @@ public class OpenWeatherTest_Unit {
             .andRespond(withSuccess(testDataJsonString, MediaType.APPLICATION_JSON));
 
         // when
-        WeatherData mockData = localTestOpenWeatherService.retrieveWeather(VALID_TEST_ZIP_CODE);
+        WeatherData mockData = localTestWeatherService.retrieveWeather(VALID_TEST_ZIP_CODE);
 
         mockServer.verify();
         assertThat(mockData, instanceOf(OpenWeatherData.class));

@@ -1,19 +1,25 @@
-package matt.project.weather;
+package matt.project.weather.weather;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import lombok.Setter;
+import matt.project.weather.WeatherData;
 
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * OpenWeather implementation.
+ *
+ * @see <a href="https://samples.openweathermap.org/data/2.5/weather?zip=94040,us&appid=b6907d289e10d714a6e88b30761fae22">Example JSON data from OpenWeather</a>
+ */
 @JsonIgnoreProperties(ignoreUnknown = true)
 class OpenWeatherData implements WeatherData {
 
-    static final String KEY_MAIN_TEMP = "temp";
-    static final String KEY_COORD_LAT = "lat";
-    static final String KEY_COORD_LON = "lon";
+    private static final String KEY_MAIN_TEMP = "temp";
+    private static final String KEY_COORD_LAT = "lat";
+    private static final String KEY_COORD_LON = "lon";
 
     /**
      * {

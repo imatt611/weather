@@ -22,7 +22,7 @@ import java.util.concurrent.ExecutionException;
 @RequiredArgsConstructor(onConstructor_ = {@Autowired})
 public class WeatherApp implements ApplicationRunner {
 
-    private final OpenWeatherService weatherService;
+    private final WeatherService weatherService;
     private final TimeZoneService timeZoneService;
     private final ElevationService elevationService;
 
@@ -52,7 +52,7 @@ public class WeatherApp implements ApplicationRunner {
 
         if (0 < sourceArgs.length) {
             String zipCodeArg = sourceArgs[0];
-            OpenWeatherData weatherData = weatherService.retrieveWeather(zipCodeArg);
+            WeatherData weatherData = weatherService.retrieveWeather(zipCodeArg);
             Double latitude = weatherData.getLatitude();
             Double longitude = weatherData.getLongitude();
 

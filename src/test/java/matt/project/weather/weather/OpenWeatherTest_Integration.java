@@ -1,5 +1,7 @@
-package matt.project.weather;
+package matt.project.weather.weather;
 
+import matt.project.weather.WeatherData;
+import matt.project.weather.WeatherService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
@@ -16,12 +18,12 @@ import static org.junit.Assert.assertThat;
 public class OpenWeatherTest_Integration {
 
     private final Logger log = LoggerFactory.getLogger(getClass());
-    @Autowired private OpenWeatherService openWeatherService;
+    @Autowired private WeatherService weatherService;
 
     @Test
     public void retrievesWeatherDataFromOpenWeather()
     {
-        OpenWeatherData openWeatherData = openWeatherService.retrieveWeather("97211");
+        WeatherData openWeatherData = weatherService.retrieveWeather("97211");
 
         log.info("Retrieved Weather Data:\n\n{}\n", openWeatherData);
 

@@ -2,17 +2,14 @@ package matt.project.weather;
 
 import matt.project.weather.elevation.GoogleElevationConfig;
 import matt.project.weather.timezone.GoogleTimeZoneConfig;
+import matt.project.weather.weather.OpenWeatherConfig;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.context.TestConfiguration;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Primary;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.web.client.RestTemplate;
 
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
@@ -20,11 +17,6 @@ import java.util.regex.Pattern;
 
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyMap;
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
 @SuppressWarnings("resource")
 @RunWith(SpringRunner.class)
@@ -57,8 +49,8 @@ public class WeatherAppTest_Spring {
         WeatherApp.main(new String[]{"80301"});
         Pattern weatherDescriptionPattern = Pattern.compile(
             String.format("At the location %s, the temperature is %f, the timezone is %s, and the elevation is %f\\.",
-                          TestConfig.CITY_NAME,
-                          TestConfig.TEMP,
+                          OpenWeatherConfig.CITY_NAME,
+                          OpenWeatherConfig.TEMP,
                           GoogleTimeZoneConfig.TIMEZONE_NAME,
                           GoogleElevationConfig.ELEVATION));
 
@@ -87,34 +79,5 @@ public class WeatherAppTest_Spring {
                           firstArg));
 
         assertThat(missingArgumentMessagePattern.matcher(outContent.toString()).find(), is(true));
-    }
-
-    @TestConfiguration
-    private static class TestConfig {
-
-        static final String CITY_NAME = "Boulder";
-        static final double TEMP = 75.2;
-
-        TestConfig()
-        {
-        }
-
-        @Bean
-        @Primary
-        static OpenWeatherService openWeatherService()
-        {
-            WeatherData weatherData = new OpenWeatherData();
-            weatherData.setName(CITY_NAME);
-            weatherData.setTemperature(TEMP);
-            weatherData.setLatitude(1.0);
-            weatherData.setLongitude(1.0);
-
-            RestTemplate mockRestTemplate = mock(RestTemplate.class);
-            when(mockRestTemplate.getForObject(anyString(), any(), anyMap())).thenReturn(weatherData);
-
-            return new OpenWeatherServiceImpl(mockRestTemplate);
-        }
-
-
     }
 }

@@ -1,6 +1,8 @@
-package matt.project.weather;
+package matt.project.weather.weather;
 
 import lombok.extern.slf4j.Slf4j;
+import matt.project.weather.GoogleApiInfo;
+import matt.project.weather.WeatherService;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.stereotype.Service;
@@ -9,12 +11,22 @@ import org.springframework.web.client.RestTemplate;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * OpenWeather implementation, paired with {@link OpenWeatherData}.
+ *
+ * @see <a href="https://openweathermap.org/current#zip">OpenWeatherMap Zip Code API</a>
+ */
 @Service
 @Slf4j
-class OpenWeatherServiceImpl implements OpenWeatherService {
+class OpenWeatherServiceImpl implements WeatherService {
 
+    static final String ROOT_URI = "https://api.openweathermap.org/data/2.5";
+    static final String GET_WEATHER_ENDPOINT_TEMPLATE = "/weather?zip={zipCode}&appid={apiKey}"; // TODO Constant-ize keys/vars
+    private static final String TEMPLATE_VAR_NAME__ZIP_CODE = "zipCode";
+    private static final String TEMPLATE_VAR_NAME__API_KEY = GoogleApiInfo.TEMPLATE_VAR_NAME__API_KEY;
     private final RestTemplate restTemplate;
 
+    private static final String PROP_REF__API_KEY_OPEN_WEATHER = "${api.key.openWeather}";
     @Value(PROP_REF__API_KEY_OPEN_WEATHER)
     private String apiKey;
 
