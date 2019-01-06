@@ -16,13 +16,8 @@ import org.springframework.web.client.RestTemplate;
 
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.regex.Pattern;
 
-import static matt.project.weather.OpenWeatherData.KEY_COORD_LAT;
-import static matt.project.weather.OpenWeatherData.KEY_COORD_LON;
-import static matt.project.weather.OpenWeatherData.KEY_MAIN_TEMP;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.ArgumentMatchers.any;
@@ -108,20 +103,14 @@ public class WeatherAppTest_Spring {
         @Primary
         static OpenWeatherService openWeatherService()
         {
-            Map<String, Double> weatherDataMain = new HashMap<>(1);
-            weatherDataMain.put(KEY_MAIN_TEMP, TEMP);
-
-            Map<String, Double> weatherDataCoordinates = new HashMap<>(2);
-            weatherDataCoordinates.put(KEY_COORD_LAT, 1.0);
-            weatherDataCoordinates.put(KEY_COORD_LON, 1.0);
-
-            OpenWeatherData openWeatherData = new OpenWeatherData();
-            openWeatherData.setName(CITY_NAME);
-            openWeatherData.setMain(weatherDataMain);
-            openWeatherData.setCoordinates(weatherDataCoordinates);
+            WeatherData weatherData = new OpenWeatherData();
+            weatherData.setName(CITY_NAME);
+            weatherData.setTemperature(TEMP);
+            weatherData.setLatitude(1.0);
+            weatherData.setLongitude(1.0);
 
             RestTemplate mockRestTemplate = mock(RestTemplate.class);
-            when(mockRestTemplate.getForObject(anyString(), any(), anyMap())).thenReturn(openWeatherData);
+            when(mockRestTemplate.getForObject(anyString(), any(), anyMap())).thenReturn(weatherData);
 
             return new OpenWeatherServiceImpl(mockRestTemplate);
         }

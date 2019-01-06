@@ -11,12 +11,7 @@ import org.springframework.web.client.RestTemplate;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.HashMap;
-import java.util.Map;
 
-import static matt.project.weather.OpenWeatherData.KEY_COORD_LAT;
-import static matt.project.weather.OpenWeatherData.KEY_COORD_LON;
-import static matt.project.weather.OpenWeatherData.KEY_MAIN_TEMP;
 import static matt.project.weather.OpenWeatherService.GET_WEATHER_ENDPOINT_TEMPLATE;
 import static matt.project.weather.OpenWeatherService.ROOT_URI;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -68,24 +63,16 @@ public class OpenWeatherTest_Unit {
     public void deserializesResults() throws Exception
     {
         // expect
-        Map<String, Double> expectedCoords = new HashMap<>(2);
-        expectedCoords.put(KEY_COORD_LON, -122.09);
-        expectedCoords.put(KEY_COORD_LAT, 37.39);
-        Map<String, Double> expectedMain = new HashMap<>(5);
-        expectedMain.put(KEY_MAIN_TEMP, 285.68);
-        expectedMain.put("humidity", 74.0);
-        expectedMain.put("pressure", 1016.8);
-        expectedMain.put("temp_min", 284.82);
-        expectedMain.put("temp_max", 286.48);
-        OpenWeatherData expectedWeatherData = new OpenWeatherData();
-        expectedWeatherData.setCoordinates(expectedCoords);
-        expectedWeatherData.setMain(expectedMain);
+        WeatherData expectedWeatherData = new OpenWeatherData();
+        expectedWeatherData.setTemperature(285.68);
+        expectedWeatherData.setLatitude(37.39);
+        expectedWeatherData.setLongitude(-122.09);
         expectedWeatherData.setName("Mountain View");
 
         // when
         ObjectMapper mapper = new ObjectMapper();
         URL src = getClass().getResource(TEST_RESPONSE_OPEN_WEATHER_JSON);
-        OpenWeatherData weatherData = mapper.readValue(src, OpenWeatherData.class);
+        WeatherData weatherData = mapper.readValue(src, OpenWeatherData.class);
 
         assertThat(weatherData, equalTo(expectedWeatherData));
     }
@@ -109,7 +96,7 @@ public class OpenWeatherTest_Unit {
             .andRespond(withSuccess(testDataJsonString, MediaType.APPLICATION_JSON));
 
         // when
-        OpenWeatherData mockData = localTestOpenWeatherService.retrieveWeather(VALID_TEST_ZIP_CODE);
+        WeatherData mockData = localTestOpenWeatherService.retrieveWeather(VALID_TEST_ZIP_CODE);
 
         mockServer.verify();
         assertThat(mockData, instanceOf(OpenWeatherData.class));
