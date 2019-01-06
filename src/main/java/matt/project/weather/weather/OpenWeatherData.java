@@ -83,11 +83,11 @@ class OpenWeatherData implements WeatherData {
     }
 
     @Override
-    public boolean equals(Object o)
+    public boolean equals(Object obj)
     {
-        if (o == this) return true;
-        if (!(o instanceof WeatherData)) return false;
-        WeatherData otherWeatherData = (WeatherData) o;
+        if (obj == this) return true;
+        if (!(obj instanceof WeatherData)) return false;
+        WeatherData otherWeatherData = (WeatherData) obj;
         if (!otherWeatherData.getName().equals(name)) return false;
         if (!otherWeatherData.getTemperature().equals(getTemperature())) return false;
         if (!otherWeatherData.getLatitude().equals(getLatitude())) return false;

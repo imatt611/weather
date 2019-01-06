@@ -22,7 +22,7 @@ import static matt.project.weather.util.ApiConstants.TEMPLATE_VAR_NAME__API_KEY;
 class OpenWeatherServiceImpl implements WeatherService {
 
     static final String ROOT_URI = "https://api.openweathermap.org/data/2.5";
-    static final String GET_WEATHER_ENDPOINT_TEMPLATE = "/weather?zip={zipCode}&appid={apiKey}"; // TODO Constant-ize keys/vars
+    static final String GET_WEATHER_ENDPOINT_TEMPLATE = "/weather?zip={zipCode}&appid={apiKey}";
     private static final String TEMPLATE_VAR_NAME__ZIP_CODE = "zipCode";
     private final RestTemplate restTemplate;
 
