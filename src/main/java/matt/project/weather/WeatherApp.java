@@ -53,22 +53,27 @@ public class WeatherApp implements ApplicationRunner {
 
         if (0 < sourceArgs.length) {
             String zipCodeArg = sourceArgs[0];
-            WeatherData weatherData = weatherService.retrieveWeather(zipCodeArg);
-            Double latitude = weatherData.getLatitude();
-            Double longitude = weatherData.getLongitude();
 
-            CompletableFuture<TimeZoneData> timeZoneFuture = CompletableFuture.supplyAsync(
-                () -> timeZoneService.retrieveTimeZone(latitude, longitude));
-            CompletableFuture<ElevationData> elevationFuture = CompletableFuture.supplyAsync(
-                () -> elevationService.retrieveElevation(latitude, longitude));
+            CompletableFuture<WeatherData> weatherDataFuture = CompletableFuture
+                .completedFuture(zipCodeArg).thenApplyAsync(weatherService::retrieveWeather);
 
-            CompletableFuture<String> weatherDescriptionFuture = timeZoneFuture
-                .thenCombineAsync(elevationFuture, (timeZoneData, elevationData) ->
-                    buildWeatherDescription(
-                        weatherData.getName(),
-                        weatherData.getTemperature(),
-                        timeZoneData.getTimeZoneName(),
-                        elevationData.getElevation()));
+            CompletableFuture<Double> latitudeFuture = weatherDataFuture.thenApplyAsync(weatherService::getLatitude);
+            CompletableFuture<Double> longitudeFuture = weatherDataFuture.thenApplyAsync(weatherService::getLongitude);
+
+            CompletableFuture<TimeZoneData> timeZoneFuture = latitudeFuture
+                .thenCombineAsync(longitudeFuture, timeZoneService::retrieveTimeZone);
+            CompletableFuture<ElevationData> elevationFuture = latitudeFuture
+                .thenCombineAsync(longitudeFuture, elevationService::retrieveElevation);
+
+            CompletableFuture<String> weatherDescriptionFuture = weatherDataFuture
+                .thenComposeAsync(weatherData -> timeZoneFuture.thenCombineAsync(
+                    elevationFuture, (timeZoneData, elevationData) -> buildWeatherDescription(
+                        weatherService.getCityName(weatherData),
+                        weatherService.getTemperature(weatherData),
+                        timeZoneService.getTimeZoneName(timeZoneData),
+                        elevationService.getElevation(elevationData)
+                    )
+                ));
 
             System.out.println(weatherDescriptionFuture.get());
         } else {

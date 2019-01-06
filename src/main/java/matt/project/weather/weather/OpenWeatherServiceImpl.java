@@ -72,4 +72,28 @@ class OpenWeatherServiceImpl implements WeatherService {
         log.trace(">>> GET Weather for zipCode: {}", validZipCode);
         return restTemplate.getForObject(GET_WEATHER_ENDPOINT_TEMPLATE, OpenWeatherData.class, variablesMap);
     }
+
+    @Override
+    public Double getLatitude(WeatherData weatherData)
+    {
+        return weatherData.getLatitude();
+    }
+
+    @Override
+    public Double getLongitude(WeatherData weatherData)
+    {
+        return weatherData.getLongitude();
+    }
+
+    @Override
+    public String getCityName(WeatherData weatherData)
+    {
+        return weatherData.getName();
+    }
+
+    @Override
+    public Double getTemperature(WeatherData weatherData)
+    {
+        return weatherData.getTemperature();
+    }
 }
