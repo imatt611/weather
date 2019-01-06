@@ -15,6 +15,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.PropertySource;
 
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.CompletionStage;
 import java.util.concurrent.ExecutionException;
 
 
@@ -53,26 +54,45 @@ public class WeatherApp implements ApplicationRunner {
 
         if (0 < sourceArgs.length) {
             String zipCodeArg = sourceArgs[0];
-            WeatherData weatherData = weatherService.retrieveWeather(zipCodeArg);
-            Double latitude = weatherData.getLatitude();
-            Double longitude = weatherData.getLongitude();
 
-            CompletableFuture<TimeZoneData> timeZoneFuture = CompletableFuture.supplyAsync(
-                () -> timeZoneService.retrieveTimeZone(latitude, longitude));
-            CompletableFuture<ElevationData> elevationFuture = CompletableFuture.supplyAsync(
-                () -> elevationService.retrieveElevation(latitude, longitude));
+            CompletableFuture<WeatherData> weatherDataFuture = CompletableFuture
+                .completedFuture(zipCodeArg)
+                .thenApplyAsync(weatherService::retrieveWeather);
 
-            CompletableFuture<String> weatherDescriptionFuture = timeZoneFuture
-                .thenCombineAsync(elevationFuture, (timeZoneData, elevationData) ->
-                    buildWeatherDescription(
-                        weatherData.getName(),
-                        weatherData.getTemperature(),
-                        timeZoneData.getTimeZoneName(),
-                        elevationData.getElevation()));
+            CompletableFuture<String> weatherDescriptionFuture = buildWeatherDescriptionFuture(
+                weatherDataFuture,
+                weatherDataFuture.thenApplyAsync(weatherService::getLatitude),
+                weatherDataFuture.thenApplyAsync(weatherService::getLongitude));
 
             System.out.println(weatherDescriptionFuture.get());
         } else {
             System.out.println("Provide a 5-digit ZIP Code as an argument to receive information about the area.");
         }
+    }
+
+    private CompletableFuture<ElevationData> buildElevationFuture(
+        CompletableFuture<Double> latitudeFuture, CompletionStage<Double> longitudeStage)
+    {
+        return latitudeFuture.thenCombineAsync(longitudeStage, elevationService::retrieveElevation);
+    }
+
+    private CompletableFuture<TimeZoneData> buildTimeZoneFuture(
+        CompletableFuture<Double> latitudeFuture, CompletionStage<Double> longitudeStage)
+    {
+        return latitudeFuture.thenCombineAsync(longitudeStage, timeZoneService::retrieveTimeZone);
+    }
+
+    private CompletableFuture<String> buildWeatherDescriptionFuture(
+        CompletableFuture<WeatherData> weatherDataFuture, CompletableFuture<Double> latitudeFuture,
+        CompletionStage<Double> longitudeStage)
+    {
+        CompletableFuture<TimeZoneData> timeZoneFuture = buildTimeZoneFuture(latitudeFuture, longitudeStage);
+        CompletableFuture<ElevationData> elevationFuture = buildElevationFuture(latitudeFuture, longitudeStage);
+
+        return weatherDataFuture
+            .thenComposeAsync(weatherData -> timeZoneFuture
+                .thenCombineAsync(elevationFuture, (timeZoneData, elevationData) -> buildWeatherDescription(
+                    weatherService.getCityName(weatherData), weatherService.getTemperature(weatherData),
+                    timeZoneService.getTimeZoneName(timeZoneData), elevationService.getElevation(elevationData))));
     }
 }

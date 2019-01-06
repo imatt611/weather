@@ -8,4 +8,28 @@ public interface WeatherService {
      * @throws IllegalArgumentException if the Zip Code is not exactly 5 Integer-parseable digits
      */
     WeatherData retrieveWeather(String zipCode);
+
+    /**
+     * @param weatherData the weather data
+     * @return the latitude the weather data refers to
+     */
+    Double getLatitude(WeatherData weatherData);
+
+    /**
+     * @param weatherData the weather data
+     * @return the longitude the weather data refers to
+     */
+    Double getLongitude(WeatherData weatherData);
+
+    /**
+     * @param weatherData the weather data
+     * @return the name of the city the weather data is about
+     */
+    String getCityName(WeatherData weatherData);
+
+    /**
+     * @param weatherData the weather data
+     * @return the temperature within the weather data
+     */
+    Double getTemperature(WeatherData weatherData);
 }

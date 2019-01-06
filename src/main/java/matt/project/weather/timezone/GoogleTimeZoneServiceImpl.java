@@ -54,4 +54,10 @@ public class GoogleTimeZoneServiceImpl implements TimeZoneService {
         log.trace(">>> GET Time Zone for latitude/longitude: {}/{}", validLatitude, validLongitude);
         return restTemplate.getForObject(ENDPOINT_TEMPLATE__GET_TIMEZONE, GoogleTimeZoneData.class, variablesMap);
     }
+
+    @Override
+    public String getTimeZoneName(TimeZoneData timeZoneData)
+    {
+        return timeZoneData.getTimeZoneName();
+    }
 }

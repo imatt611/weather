@@ -51,4 +51,10 @@ public class GoogleElevationServiceImpl implements ElevationService {
         log.trace(">>> GET Elevation for latitude/longitude: {}/{}", validLatitude, validLongitude);
         return restTemplate.getForObject(ENDPOINT_TEMPLATE__GET_ELEVATION, GoogleElevationData.class, variablesMap);
     }
+
+    @Override
+    public Double getElevation(ElevationData elevationData)
+    {
+        return elevationData.getElevation();
+    }
 }
