@@ -1,6 +1,6 @@
-package matt.project.weather;
+package matt.project.weather.util;
 
-public enum LatitudeLongitudeUtil {
+public enum LatitudeLongitude {
     ;
     private static final double MIN_LATITUDE = -90.0;
     private static final double MAX_LATITUDE = 90.0;

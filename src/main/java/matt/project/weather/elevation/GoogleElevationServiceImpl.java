@@ -11,14 +11,14 @@ import org.springframework.web.client.RestTemplate;
 import java.util.HashMap;
 import java.util.Map;
 
-import static matt.project.weather.GoogleApiInfo.ENDPOINT_TEMPLATE__GET_ELEVATION;
-import static matt.project.weather.GoogleApiInfo.PROP_REF__API_KEY_GOOGLE;
-import static matt.project.weather.GoogleApiInfo.ROOT_URI;
-import static matt.project.weather.GoogleApiInfo.TEMPLATE_VAR_NAME__API_KEY;
-import static matt.project.weather.GoogleApiInfo.TEMPLATE_VAR_NAME__LATITUDE;
-import static matt.project.weather.GoogleApiInfo.TEMPLATE_VAR_NAME__LONGITUDE;
-import static matt.project.weather.LatitudeLongitudeUtil.getValidatedLatitude;
-import static matt.project.weather.LatitudeLongitudeUtil.getValidatedLongitude;
+import static matt.project.weather.util.ApiConstants.TEMPLATE_VAR_NAME__API_KEY;
+import static matt.project.weather.util.GoogleApiConstants.ENDPOINT_TEMPLATE__GET_ELEVATION;
+import static matt.project.weather.util.GoogleApiConstants.PROP_REF__API_KEY_GOOGLE;
+import static matt.project.weather.util.GoogleApiConstants.ROOT_URI;
+import static matt.project.weather.util.GoogleApiConstants.TEMPLATE_VAR_NAME__LATITUDE;
+import static matt.project.weather.util.GoogleApiConstants.TEMPLATE_VAR_NAME__LONGITUDE;
+import static matt.project.weather.util.LatitudeLongitude.getValidatedLatitude;
+import static matt.project.weather.util.LatitudeLongitude.getValidatedLongitude;
 
 @Service
 @Slf4j
