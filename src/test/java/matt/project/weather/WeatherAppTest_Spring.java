@@ -17,7 +17,6 @@ import static org.junit.Assert.assertThat;
 @SuppressWarnings("resource")
 @RunWith(SpringRunner.class)
 @SpringBootTest
-//@ContextConfiguration(classes = {GoogleTimeZoneConfig.class, GoogleElevationConfig.class, OpenWeatherConfig.class})
 public class WeatherAppTest_Spring {
 
     public static final String TEST_CITY_NAME = "Boulder";
