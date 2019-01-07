@@ -29,7 +29,7 @@ public interface WeatherService {
 
     /**
      * @param weatherData the weather data
-     * @return the temperature within the weather data
+     * @return the temperature within the weather data, in Fahrenheit, to two decimal places
      */
-    Double getTemperature(WeatherData weatherData);
+    Double getTemperatureInFahrenheit(WeatherData weatherData);
 }

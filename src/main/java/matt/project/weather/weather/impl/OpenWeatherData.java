@@ -32,7 +32,7 @@ class OpenWeatherData implements WeatherData {
 
     /**
      * {
-     * "temp": float
+     * "temp": float (Kelvin)
      * "humidity": int,
      * "pressure": float,
      * "temp_min": float,

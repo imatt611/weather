@@ -17,13 +17,14 @@ import static org.junit.Assert.assertThat;
 @SuppressWarnings("resource")
 @RunWith(SpringRunner.class)
 @SpringBootTest
-//@ContextConfiguration(classes = {GoogleTimeZoneConfig.class, GoogleElevationConfig.class, OpenWeatherConfig.class})
 public class WeatherAppTest_Spring {
 
     public static final String TEST_CITY_NAME = "Boulder";
-    public static final double TEST_TEMPERATURE = 75.2;
+    public static final double TEST_TEMPERATURE_KELVIN = 297.15;
+    private static final double TEST_TEMPERATURE_FAHRENHEIT = 75.2;
     public static final String TEST_TIMEZONE_NAME = "Mountain Daylight Time";
-    public static final Double TEST_ELEVATION = 1500.3784;
+    public static final Double TEST_ELEVATION_METERS = 1655.063947038;
+    private static final Double TEST_ELEVATION_FEET = 5430.0;
 
     private final ByteArrayOutputStream outContent = new ByteArrayOutputStream();
     private final ByteArrayOutputStream errContent = new ByteArrayOutputStream();
@@ -50,11 +51,12 @@ public class WeatherAppTest_Spring {
         // Must trigger #main from test to ensure it feeds System#out into the stream under test
         WeatherApp.main(new String[]{"80301"});
         Pattern weatherDescriptionPattern = Pattern.compile(
-            String.format("At the location %s, the temperature is %f, the timezone is %s, and the elevation is %f\\.",
-                          TEST_CITY_NAME,
-                          TEST_TEMPERATURE,
-                          TEST_TIMEZONE_NAME,
-                          TEST_ELEVATION));
+            String.format(
+                "At the location %s, the temperature is %f Fahrenheit, the timezone is %s, and the elevation is %f feet\\.",
+                TEST_CITY_NAME,
+                TEST_TEMPERATURE_FAHRENHEIT,
+                TEST_TIMEZONE_NAME,
+                TEST_ELEVATION_FEET));
 
         assertThat(weatherDescriptionPattern.matcher(outContent.toString()).find(), is(true));
     }

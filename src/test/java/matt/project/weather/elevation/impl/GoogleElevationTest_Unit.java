@@ -1,9 +1,12 @@
 package matt.project.weather.elevation.impl;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import junitparams.JUnitParamsRunner;
+import junitparams.Parameters;
 import matt.project.weather.elevation.ElevationData;
 import matt.project.weather.elevation.ElevationService;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
@@ -26,6 +29,7 @@ import static org.springframework.test.web.client.match.MockRestRequestMatchers.
 import static org.springframework.test.web.client.match.MockRestRequestMatchers.requestToUriTemplate;
 import static org.springframework.test.web.client.response.MockRestResponseCreators.withSuccess;
 
+@RunWith(JUnitParamsRunner.class)
 public class GoogleElevationTest_Unit {
 
     private static final String TEST_RESPONSE_GOOGLE_ELEVATION_JSON = "/testResponse_googleElevation.json";
@@ -102,6 +106,22 @@ public class GoogleElevationTest_Unit {
 
         mockServer.verify();
         assertThat(mockData, instanceOf(ElevationData.class));
+    }
+
+    @Test
+    @Parameters({
+        "1655.063947038, 5430",
+        "-1, -3.28",
+        "0, 0",
+        "12345678, 40504194.21"
+    })
+    public void calculatesFeetToTwoDecimalPlaces(double elevationMeters, double elevationFeet)
+    {
+        ElevationService elevationService = new GoogleElevationService();
+        ElevationData elevationData = new GoogleElevationData();
+        elevationData.setElevation(elevationMeters);
+
+        assertThat(elevationService.getElevationInFeet(elevationData), equalTo(elevationFeet));
     }
 
 }

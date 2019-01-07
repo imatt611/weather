@@ -8,6 +8,8 @@ import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -23,6 +25,8 @@ import static matt.project.weather.util.LatitudeLongitude.getValidatedLongitude;
 @Service
 @Slf4j
 public class GoogleElevationService implements ElevationService {
+
+    private static final BigDecimal FORMULA_PART__METER_FEET__FACTOR = BigDecimal.valueOf(3.28084);
 
     private final RestTemplate restTemplate;
 
@@ -55,8 +59,11 @@ public class GoogleElevationService implements ElevationService {
     }
 
     @Override
-    public Double getElevation(ElevationData elevationData)
+    public Double getElevationInFeet(ElevationData elevationData)
     {
-        return elevationData.getElevation();
+        BigDecimal elevationMeters = BigDecimal.valueOf(elevationData.getElevation());
+        return elevationMeters.multiply(FORMULA_PART__METER_FEET__FACTOR)
+                              .setScale(2, RoundingMode.HALF_UP)
+                              .doubleValue();
     }
 }

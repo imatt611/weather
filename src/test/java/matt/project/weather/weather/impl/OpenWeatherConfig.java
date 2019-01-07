@@ -7,7 +7,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.web.client.RestTemplate;
 
 import static matt.project.weather.WeatherAppTest_Spring.TEST_CITY_NAME;
-import static matt.project.weather.WeatherAppTest_Spring.TEST_TEMPERATURE;
+import static matt.project.weather.WeatherAppTest_Spring.TEST_TEMPERATURE_KELVIN;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyMap;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -22,7 +22,7 @@ public class OpenWeatherConfig {
     {
         WeatherData weatherData = new OpenWeatherData();
         weatherData.setName(TEST_CITY_NAME);
-        weatherData.setTemperature(TEST_TEMPERATURE);
+        weatherData.setTemperature(TEST_TEMPERATURE_KELVIN);
         weatherData.setLatitude(1.0);
         weatherData.setLongitude(1.0);
 

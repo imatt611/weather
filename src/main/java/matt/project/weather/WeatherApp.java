@@ -35,11 +35,11 @@ public class WeatherApp implements ApplicationRunner {
     }
 
     private static String buildWeatherDescription(
-        String cityName, Double temperature, String timeZoneName, Double elevation)
+        String cityName, Double fahrenheitTemperature, String timeZoneName, Double elevation)
     {
         return String.format(
-            "At the location %s, the temperature is %f, the timezone is %s, and the elevation is %f.",
-            cityName, temperature, timeZoneName, elevation);
+            "At the location %s, the temperature is %f Fahrenheit, the timezone is %s, and the elevation is %f feet.",
+            cityName, fahrenheitTemperature, timeZoneName, elevation);
     }
 
     @Override
@@ -92,7 +92,9 @@ public class WeatherApp implements ApplicationRunner {
         return weatherDataFuture
             .thenComposeAsync(weatherData -> timeZoneFuture
                 .thenCombineAsync(elevationFuture, (timeZoneData, elevationData) -> buildWeatherDescription(
-                    weatherService.getCityName(weatherData), weatherService.getTemperature(weatherData),
-                    timeZoneService.getTimeZoneName(timeZoneData), elevationService.getElevation(elevationData))));
+                    weatherService.getCityName(weatherData),
+                    weatherService.getTemperatureInFahrenheit(weatherData),
+                    timeZoneService.getTimeZoneName(timeZoneData),
+                    elevationService.getElevationInFeet(elevationData))));
     }
 }

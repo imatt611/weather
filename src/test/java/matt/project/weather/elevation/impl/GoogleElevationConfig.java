@@ -6,7 +6,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.client.RestTemplate;
 
-import static matt.project.weather.WeatherAppTest_Spring.TEST_ELEVATION;
+import static matt.project.weather.WeatherAppTest_Spring.TEST_ELEVATION_METERS;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyMap;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -20,7 +20,7 @@ public class GoogleElevationConfig {
     static ElevationService elevationService()
     {
         ElevationData elevationData = new GoogleElevationData();
-        elevationData.setElevation(TEST_ELEVATION);
+        elevationData.setElevation(TEST_ELEVATION_METERS);
 
         RestTemplate mockRestTemplate = mock(RestTemplate.class);
         when(mockRestTemplate.getForObject(anyString(), any(), anyMap())).thenReturn(elevationData);
