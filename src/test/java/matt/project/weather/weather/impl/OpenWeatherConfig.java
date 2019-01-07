@@ -1,10 +1,13 @@
-package matt.project.weather.weather;
+package matt.project.weather.weather.impl;
 
+import matt.project.weather.weather.WeatherData;
+import matt.project.weather.weather.WeatherService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Primary;
 import org.springframework.web.client.RestTemplate;
 
+import static matt.project.weather.WeatherAppTest_Spring.TEST_CITY_NAME;
+import static matt.project.weather.WeatherAppTest_Spring.TEST_TEMPERATURE;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyMap;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -14,22 +17,18 @@ import static org.mockito.Mockito.when;
 @Configuration
 public class OpenWeatherConfig {
 
-    public static final String CITY_NAME = "Boulder";
-    public static final double TEMP = 75.2;
-
     @Bean
-    @Primary
-    static WeatherService openWeatherService()
+    static WeatherService weatherService()
     {
         WeatherData weatherData = new OpenWeatherData();
-        weatherData.setName(CITY_NAME);
-        weatherData.setTemperature(TEMP);
+        weatherData.setName(TEST_CITY_NAME);
+        weatherData.setTemperature(TEST_TEMPERATURE);
         weatherData.setLatitude(1.0);
         weatherData.setLongitude(1.0);
 
         RestTemplate mockRestTemplate = mock(RestTemplate.class);
         when(mockRestTemplate.getForObject(anyString(), any(), anyMap())).thenReturn(weatherData);
 
-        return new OpenWeatherServiceImpl(mockRestTemplate);
+        return new OpenWeatherService(mockRestTemplate);
     }
 }

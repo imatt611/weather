@@ -13,19 +13,19 @@ import static org.junit.Assert.assertThat;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
-public class GoogleTimeZoneTest_Integration {
+public class TimeZoneTest_Integration {
 
     private final Logger log = LoggerFactory.getLogger(getClass());
     @Autowired private TimeZoneService timeZoneService;
 
     @Test
-    public void retrievesTimeZoneDataFromGoogle()
+    public void retrievesTimeZoneData()
     {
         TimeZoneData timeZoneData = timeZoneService.retrieveTimeZone(45.52, -122.67);
 
         log.info("Retrieved Time Zone Data:\n\n{}\n", timeZoneData);
 
-        // Assertions are for required details only. See resources/testResponse_googleTimeZone.json for sample
+        // Assertions for required details only
         assertThat(timeZoneData.getTimeZoneName(), notNullValue(String.class));
     }
 }

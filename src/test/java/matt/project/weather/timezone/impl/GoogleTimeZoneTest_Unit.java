@@ -1,6 +1,8 @@
-package matt.project.weather.timezone;
+package matt.project.weather.timezone.impl;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import matt.project.weather.timezone.TimeZoneData;
+import matt.project.weather.timezone.TimeZoneService;
 import org.junit.Test;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.http.HttpMethod;
@@ -20,48 +22,41 @@ import static matt.project.weather.util.GoogleApiConstants.ENDPOINT_TEMPLATE__GE
 import static matt.project.weather.util.GoogleApiConstants.ROOT_URI;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.instanceOf;
+import static org.hamcrest.Matchers.not;
 import static org.hamcrest.Matchers.stringContainsInOrder;
 import static org.junit.Assert.assertThat;
-import static org.mockito.Mockito.mock;
 import static org.springframework.test.web.client.match.MockRestRequestMatchers.method;
 import static org.springframework.test.web.client.match.MockRestRequestMatchers.requestTo;
 import static org.springframework.test.web.client.response.MockRestResponseCreators.withSuccess;
 
 public class GoogleTimeZoneTest_Unit {
-
     private static final String TEST_RESPONSE_GOOGLE_TIME_ZONE_JSON = "/testResponse_googleTimeZone.json";
-    private static final TimeZoneService timeZoneService = new GoogleTimeZoneServiceImpl(
-        mock(RestTemplate.class));
+    private static final String TEST_TIME_ZONE_NAME = "Nowhere Time";
 
-    @Test(expected = IllegalArgumentException.class)
-    public void refusesLatitudeOver90() throws IllegalArgumentException
-    {
-        timeZoneService.retrieveTimeZone(90.000000000001, 45.0);
-    }
-
-    @Test(expected = IllegalArgumentException.class)
-    public void refusesLatitudeUnderNegative90() throws IllegalArgumentException
-    {
-        timeZoneService.retrieveTimeZone(-90.000000000001, 45.0);
-    }
-
-    @Test(expected = IllegalArgumentException.class)
-    public void refusesLongitudeOver180() throws IllegalArgumentException
-    {
-        timeZoneService.retrieveTimeZone(45.0, 180.00001);
-    }
-
-    @Test(expected = IllegalArgumentException.class)
-    public void refusesLongitudeUnderNegative180() throws IllegalArgumentException
-    {
-        timeZoneService.retrieveTimeZone(-45.0, -180.00001);
-    }
-
-    @SuppressWarnings("JUnitTestMethodWithNoAssertions") // no throw passes test
     @Test
-    public void acceptsValidArguments()
+    public void evaluatesEquality_whenTrue()
     {
-        timeZoneService.retrieveTimeZone(45.0, 99.5);
+        //given
+        TimeZoneData timeZoneData1 = new GoogleTimeZoneData();
+        timeZoneData1.setTimeZoneName(TEST_TIME_ZONE_NAME);
+        TimeZoneData timeZoneData2 = new GoogleTimeZoneData();
+        timeZoneData2.setTimeZoneName(TEST_TIME_ZONE_NAME);
+
+        //expect
+        assertThat(timeZoneData1, equalTo(timeZoneData2));
+    }
+
+    @Test
+    public void evaluatesEquality_whenFalse()
+    {
+        //given
+        TimeZoneData timeZoneData1 = new GoogleTimeZoneData();
+        timeZoneData1.setTimeZoneName(TEST_TIME_ZONE_NAME);
+        TimeZoneData timeZoneData2 = new GoogleTimeZoneData();
+        timeZoneData2.setTimeZoneName("Somewhere Time");
+
+        //expect
+        assertThat(timeZoneData2, not(equalTo(timeZoneData1)));
     }
 
     @Test
@@ -80,11 +75,11 @@ public class GoogleTimeZoneTest_Unit {
     }
 
     @Test
-    public void usesKnownGoogleTimeZoneApiContractAndReturnsGoogleTimeZoneData() throws Exception
+    public void usesKnownGoogleTimeZoneApiContractAndReturnsTimeZoneData() throws Exception
     {
         // given
         RestTemplate restTemplate = new RestTemplateBuilder().rootUri(ROOT_URI).build();
-        TimeZoneService localTestTimeZoneService = new GoogleTimeZoneServiceImpl(restTemplate);
+        TimeZoneService localTestTimeZoneService = new GoogleTimeZoneService(restTemplate);
 
         MockRestServiceServer mockServer = MockRestServiceServer.createServer(restTemplate);
 
@@ -114,6 +109,6 @@ public class GoogleTimeZoneTest_Unit {
             .retrieveTimeZone(testLatLongTuple.get("lat"), testLatLongTuple.get("lon"));
 
         mockServer.verify();
-        assertThat(mockData, instanceOf(GoogleTimeZoneData.class));
+        assertThat(mockData, instanceOf(TimeZoneData.class));
     }
 }

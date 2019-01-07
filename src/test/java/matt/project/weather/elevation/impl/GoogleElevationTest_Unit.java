@@ -1,6 +1,8 @@
-package matt.project.weather.elevation;
+package matt.project.weather.elevation.impl;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import matt.project.weather.elevation.ElevationData;
+import matt.project.weather.elevation.ElevationService;
 import org.junit.Test;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.http.HttpMethod;
@@ -18,8 +20,8 @@ import static matt.project.weather.util.GoogleApiConstants.ENDPOINT_TEMPLATE__GE
 import static matt.project.weather.util.GoogleApiConstants.ROOT_URI;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.instanceOf;
+import static org.hamcrest.Matchers.not;
 import static org.junit.Assert.assertThat;
-import static org.mockito.Mockito.mock;
 import static org.springframework.test.web.client.match.MockRestRequestMatchers.method;
 import static org.springframework.test.web.client.match.MockRestRequestMatchers.requestToUriTemplate;
 import static org.springframework.test.web.client.response.MockRestResponseCreators.withSuccess;
@@ -27,57 +29,54 @@ import static org.springframework.test.web.client.response.MockRestResponseCreat
 public class GoogleElevationTest_Unit {
 
     private static final String TEST_RESPONSE_GOOGLE_ELEVATION_JSON = "/testResponse_googleElevation.json";
-    private static final ElevationService elevationService = new GoogleElevationServiceImpl(
-        mock(RestTemplate.class));
 
-    @Test(expected = IllegalArgumentException.class)
-    public void refusesLatitudeOver90() throws IllegalArgumentException
-    {
-        elevationService.retrieveElevation(90.000000000001, 45.0);
-    }
-
-    @Test(expected = IllegalArgumentException.class)
-    public void refusesLatitudeUnderNegative90() throws IllegalArgumentException
-    {
-        elevationService.retrieveElevation(-90.000000000001, 45.0);
-    }
-
-    @Test(expected = IllegalArgumentException.class)
-    public void refusesLongitudeOver180() throws IllegalArgumentException
-    {
-        elevationService.retrieveElevation(45.0, 180.00001);
-    }
-
-    @Test(expected = IllegalArgumentException.class)
-    public void refusesLongitudeUnderNegative180() throws IllegalArgumentException
-    {
-        elevationService.retrieveElevation(-45.0, -180.00001);
-    }
-
-    @SuppressWarnings("JUnitTestMethodWithNoAssertions") // no throw passes test
     @Test
-    public void acceptsValidArguments()
+    public void evaluatesEquality_whenTrue()
     {
-        elevationService.retrieveElevation(45.0, 99.5);
+        //given
+        ElevationData elevationData1 = new GoogleElevationData();
+        elevationData1.setElevation(5.0);
+        ElevationData elevationData2 = new GoogleElevationData();
+        elevationData2.setElevation(5.0);
+
+        //expect
+        assertThat(elevationData1, equalTo(elevationData2));
+    }
+
+    @Test
+    public void evaluatesEquality_whenFalse()
+    {
+        //given
+        ElevationData elevationData1 = new GoogleElevationData();
+        elevationData1.setElevation(5.0);
+        ElevationData elevationData2 = new GoogleElevationData();
+        elevationData2.setElevation(1.4);
+
+        //expect
+        assertThat(elevationData2, not(equalTo(elevationData1)));
     }
 
     @Test
     public void deserializesResults() throws Exception
     {
+        // expect
+        ElevationData expectedElevationData = new GoogleElevationData();
+        expectedElevationData.setElevation(1608.637939453125);
+
+        // when
         ObjectMapper mapper = new ObjectMapper();
         URL src = getClass().getResource(TEST_RESPONSE_GOOGLE_ELEVATION_JSON);
-
         ElevationData elevationData = mapper.readValue(src, GoogleElevationData.class);
 
-        assertThat(elevationData.getElevation(), equalTo(1608.637939453125));
+        assertThat(elevationData, equalTo(expectedElevationData));
     }
 
     @Test
-    public void usesKnownGoogleElevationApiContractAndReturnsGoogleElevationData() throws Exception
+    public void usesKnownGoogleElevationApiContractAndReturnsElevationData() throws Exception
     {
         // given
         RestTemplate restTemplate = new RestTemplateBuilder().rootUri(ROOT_URI).build();
-        ElevationService localTestElevationService = new GoogleElevationServiceImpl(restTemplate);
+        ElevationService localTestElevationService = new GoogleElevationService(restTemplate);
 
         MockRestServiceServer mockServer = MockRestServiceServer.createServer(restTemplate);
 
@@ -102,6 +101,7 @@ public class GoogleElevationTest_Unit {
             .retrieveElevation(testLatLongTuple.get("lat"), testLatLongTuple.get("lon"));
 
         mockServer.verify();
-        assertThat(mockData, instanceOf(GoogleElevationData.class));
+        assertThat(mockData, instanceOf(ElevationData.class));
     }
+
 }

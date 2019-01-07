@@ -1,18 +1,17 @@
-package matt.project.weather.elevation;
+package matt.project.weather.elevation.impl;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
+import matt.project.weather.elevation.ElevationData;
 
 import java.util.List;
 import java.util.Map;
 
+@Data
 @JsonIgnoreProperties(ignoreUnknown = true)
 class GoogleElevationData implements ElevationData {
 
-    @Getter
-    @Setter
     private double elevation;
 
     @SuppressWarnings("unchecked")
@@ -23,5 +22,4 @@ class GoogleElevationData implements ElevationData {
         Map<String, Object> result = (Map<String, Object>) results.get(0);
         elevation = (double) result.get("elevation");
     }
-
 }

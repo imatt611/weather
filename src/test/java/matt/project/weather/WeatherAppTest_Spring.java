@@ -1,14 +1,10 @@
 package matt.project.weather;
 
-import matt.project.weather.elevation.GoogleElevationConfig;
-import matt.project.weather.timezone.GoogleTimeZoneConfig;
-import matt.project.weather.weather.OpenWeatherConfig;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.io.ByteArrayOutputStream;
@@ -21,8 +17,14 @@ import static org.junit.Assert.assertThat;
 @SuppressWarnings("resource")
 @RunWith(SpringRunner.class)
 @SpringBootTest
-@ContextConfiguration(classes = GoogleElevationConfig.class)
+//@ContextConfiguration(classes = {GoogleTimeZoneConfig.class, GoogleElevationConfig.class, OpenWeatherConfig.class})
 public class WeatherAppTest_Spring {
+
+    public static final String TEST_CITY_NAME = "Boulder";
+    public static final double TEST_TEMPERATURE = 75.2;
+    public static final String TEST_TIMEZONE_NAME = "Mountain Daylight Time";
+    public static final Double TEST_ELEVATION = 1500.3784;
+
     private final ByteArrayOutputStream outContent = new ByteArrayOutputStream();
     private final ByteArrayOutputStream errContent = new ByteArrayOutputStream();
     private final PrintStream originalOut = System.out;
@@ -49,10 +51,10 @@ public class WeatherAppTest_Spring {
         WeatherApp.main(new String[]{"80301"});
         Pattern weatherDescriptionPattern = Pattern.compile(
             String.format("At the location %s, the temperature is %f, the timezone is %s, and the elevation is %f\\.",
-                          OpenWeatherConfig.CITY_NAME,
-                          OpenWeatherConfig.TEMP,
-                          GoogleTimeZoneConfig.TIMEZONE_NAME,
-                          GoogleElevationConfig.ELEVATION));
+                          TEST_CITY_NAME,
+                          TEST_TEMPERATURE,
+                          TEST_TIMEZONE_NAME,
+                          TEST_ELEVATION));
 
         assertThat(weatherDescriptionPattern.matcher(outContent.toString()).find(), is(true));
     }
