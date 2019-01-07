@@ -1,60 +1,65 @@
-package matt.project.weather.elevation;
+package matt.project.weather.timezone.impl;
 
 import lombok.extern.slf4j.Slf4j;
+import matt.project.weather.timezone.TimeZoneData;
+import matt.project.weather.timezone.TimeZoneService;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import java.time.Instant;
 import java.util.HashMap;
 import java.util.Map;
 
 import static matt.project.weather.util.ApiConstants.TEMPLATE_VAR_NAME__API_KEY;
-import static matt.project.weather.util.GoogleApiConstants.ENDPOINT_TEMPLATE__GET_ELEVATION;
+import static matt.project.weather.util.GoogleApiConstants.ENDPOINT_TEMPLATE__GET_TIMEZONE;
 import static matt.project.weather.util.GoogleApiConstants.PROP_REF__API_KEY_GOOGLE;
 import static matt.project.weather.util.GoogleApiConstants.ROOT_URI;
 import static matt.project.weather.util.GoogleApiConstants.TEMPLATE_VAR_NAME__LATITUDE;
 import static matt.project.weather.util.GoogleApiConstants.TEMPLATE_VAR_NAME__LONGITUDE;
+import static matt.project.weather.util.GoogleApiConstants.TEMPLATE_VAR_NAME__TIMESTAMP;
 import static matt.project.weather.util.LatitudeLongitude.getValidatedLatitude;
 import static matt.project.weather.util.LatitudeLongitude.getValidatedLongitude;
 
 @Service
 @Slf4j
-public class GoogleElevationServiceImpl implements ElevationService {
+public class GoogleTimeZoneService implements TimeZoneService {
 
     private final RestTemplate restTemplate;
 
     @Value(PROP_REF__API_KEY_GOOGLE)
     private String apiKey;
 
-    public GoogleElevationServiceImpl()
+    public GoogleTimeZoneService()
     {
         restTemplate = new RestTemplateBuilder().rootUri(ROOT_URI).build();
     }
 
-    public GoogleElevationServiceImpl(RestTemplate template)
+    public GoogleTimeZoneService(RestTemplate template)
     {
         restTemplate = template;
     }
 
     @Override
-    public ElevationData retrieveElevation(double latitude, double longitude)
+    public TimeZoneData retrieveTimeZone(double latitude, double longitude)
     {
         double validLatitude = getValidatedLatitude(latitude);
         double validLongitude = getValidatedLongitude(longitude);
 
-        Map<String, Object> variablesMap = new HashMap<>(2);
+        Map<String, Object> variablesMap = new HashMap<>(4);
         variablesMap.put(TEMPLATE_VAR_NAME__LATITUDE, validLatitude);
         variablesMap.put(TEMPLATE_VAR_NAME__LONGITUDE, validLongitude);
+        variablesMap.put(TEMPLATE_VAR_NAME__TIMESTAMP, Instant.now().getEpochSecond());
         variablesMap.put(TEMPLATE_VAR_NAME__API_KEY, apiKey);
 
-        log.trace(">>> GET Elevation for latitude/longitude: {}/{}", validLatitude, validLongitude);
-        return restTemplate.getForObject(ENDPOINT_TEMPLATE__GET_ELEVATION, GoogleElevationData.class, variablesMap);
+        log.trace(">>> GET Time Zone for latitude/longitude: {}/{}", validLatitude, validLongitude);
+        return restTemplate.getForObject(ENDPOINT_TEMPLATE__GET_TIMEZONE, GoogleTimeZoneData.class, variablesMap);
     }
 
     @Override
-    public Double getElevation(ElevationData elevationData)
+    public String getTimeZoneName(TimeZoneData timeZoneData)
     {
-        return elevationData.getElevation();
+        return timeZoneData.getTimeZoneName();
     }
 }

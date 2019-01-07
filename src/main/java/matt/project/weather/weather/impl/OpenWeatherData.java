@@ -1,9 +1,10 @@
-package matt.project.weather.weather;
+package matt.project.weather.weather.impl;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import lombok.Setter;
+import matt.project.weather.weather.WeatherData;
 
 import java.util.HashMap;
 import java.util.Map;

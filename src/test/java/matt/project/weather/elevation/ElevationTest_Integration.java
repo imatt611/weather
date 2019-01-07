@@ -13,19 +13,19 @@ import static org.junit.Assert.assertThat;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
-public class GoogleElevationTest_Integration {
+public class ElevationTest_Integration {
 
     private final Logger log = LoggerFactory.getLogger(getClass());
-    @Autowired private GoogleElevationServiceImpl elevationService;
+    @Autowired private ElevationService elevationService;
 
     @Test
-    public void retrievesElevationDataFromGoogle()
+    public void retrievesElevationData()
     {
         ElevationData elevationData = elevationService.retrieveElevation(45.52, -122.67);
 
         log.info("Retrieved Elevation Data:\n\n{}\n", elevationData);
 
-        // Assertions are for required details only. See resources/testResponse_googleElevation.json for sample
+        // Assertions for required details only
         assertThat(elevationData.getElevation(), notNullValue(Double.class));
     }
 }

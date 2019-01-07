@@ -1,6 +1,8 @@
-package matt.project.weather.weather;
+package matt.project.weather.weather.impl;
 
 import lombok.extern.slf4j.Slf4j;
+import matt.project.weather.weather.WeatherData;
+import matt.project.weather.weather.WeatherService;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.stereotype.Service;
@@ -18,7 +20,7 @@ import static matt.project.weather.util.ApiConstants.TEMPLATE_VAR_NAME__API_KEY;
  */
 @Service
 @Slf4j
-class OpenWeatherServiceImpl implements WeatherService {
+public class OpenWeatherService implements WeatherService {
 
     static final String ROOT_URI = "https://api.openweathermap.org/data/2.5";
     static final String GET_WEATHER_ENDPOINT_TEMPLATE = "/weather?zip={zipCode}&appid={apiKey}";
@@ -28,12 +30,12 @@ class OpenWeatherServiceImpl implements WeatherService {
     @Value(PROP_REF__API_KEY_OPEN_WEATHER)
     private String apiKey;
 
-    OpenWeatherServiceImpl()
+    OpenWeatherService()
     {
         restTemplate = new RestTemplateBuilder().rootUri(ROOT_URI).build();
     }
 
-    OpenWeatherServiceImpl(RestTemplate template)
+    public OpenWeatherService(RestTemplate template)
     {
         restTemplate = template;
     }
