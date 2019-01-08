@@ -8,6 +8,7 @@ import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -24,9 +25,16 @@ public class OpenWeatherService implements WeatherService {
 
     static final String ROOT_URI = "https://api.openweathermap.org/data/2.5";
     static final String GET_WEATHER_ENDPOINT_TEMPLATE = "/weather?zip={zipCode}&appid={apiKey}";
+    static final String FAHRENHEIT = "FAHRENHEIT";
+
     private static final String TEMPLATE_VAR_NAME__ZIP_CODE = "zipCode";
     private static final String PROP_REF__API_KEY_OPEN_WEATHER = "${api.key.openWeather}";
+    private static final BigDecimal FORMULA_PART__KELVIN_CELSIUS__DIFFERENCE = BigDecimal.valueOf(273.15);
+    private static final BigDecimal FORMULA_PART__FAHRENHEIT_CELSIUS__DIFFERENCE = BigDecimal.valueOf(32.0);
+    private static final BigDecimal FORMULA_PART__CELSIUS_FAHRENHEIT__FACTOR = BigDecimal.valueOf(9.0 / 5.0);
+
     private final RestTemplate restTemplate;
+
     @Value(PROP_REF__API_KEY_OPEN_WEATHER)
     private String apiKey;
 
@@ -97,5 +105,17 @@ public class OpenWeatherService implements WeatherService {
     public Double getTemperature(WeatherData weatherData)
     {
         return weatherData.getTemperature();
+    }
+
+    @Override
+    public Double getTemperatureInFahrenheit(WeatherData weatherData)
+    {
+        BigDecimal kelvinTemperature = BigDecimal.valueOf(weatherData.getTemperature());
+        // Formula: 9/5 (K - 273.15) + 32
+        return (FORMULA_PART__CELSIUS_FAHRENHEIT__FACTOR
+            .multiply(kelvinTemperature.subtract(FORMULA_PART__KELVIN_CELSIUS__DIFFERENCE))
+            .add(FORMULA_PART__FAHRENHEIT_CELSIUS__DIFFERENCE))
+            .doubleValue();
+
     }
 }

@@ -172,4 +172,21 @@ public class OpenWeatherTest_Unit {
         mockServer.verify();
         assertThat(mockData, instanceOf(WeatherData.class));
     }
+
+    //TODO Parametrize
+    @Test
+    public void calculatesFahrenheit()
+    {
+        WeatherService weatherService = new OpenWeatherService();
+
+        WeatherData weatherData1 = new OpenWeatherData();
+        weatherData1.setTemperature(362.5);
+
+        assertThat(weatherService.getTemperatureInFahrenheit(weatherData1), equalTo(192.83));
+
+        WeatherData weatherData2 = new OpenWeatherData();
+        weatherData2.setTemperature(220.0);
+
+        assertThat(weatherService.getTemperatureInFahrenheit(weatherData2), equalTo(-63.67));
+    }
 }

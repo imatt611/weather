@@ -23,7 +23,7 @@ public interface WeatherData {
     void setLongitude(Double longitude);
 
     /**
-     * @return the temperature
+     * @return the temperature in Kelvin
      */
     Double getTemperature();
 
