@@ -38,7 +38,7 @@ public class WeatherApp implements ApplicationRunner {
         String cityName, Double temperature, String timeZoneName, Double elevation)
     {
         return String.format(
-            "At the location %s, the temperature is %f, the timezone is %s, and the elevation is %f.",
+            "At the location %s, the temperature is %f Fahrenheit, the timezone is %s, and the elevation is %f.",
             cityName, temperature, timeZoneName, elevation);
     }
 
