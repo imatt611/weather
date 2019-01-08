@@ -20,7 +20,8 @@ import static org.junit.Assert.assertThat;
 public class WeatherAppTest_Spring {
 
     public static final String TEST_CITY_NAME = "Boulder";
-    public static final double TEST_TEMPERATURE = 75.2;
+    public static final double TEST_TEMPERATURE_KELVIN = 297.15;
+    private static final double TEST_TEMPERATURE_FAHRENHEIT = 75.2;
     public static final String TEST_TIMEZONE_NAME = "Mountain Daylight Time";
     public static final Double TEST_ELEVATION = 1500.3784;
 
@@ -51,7 +52,7 @@ public class WeatherAppTest_Spring {
         Pattern weatherDescriptionPattern = Pattern.compile(
             String.format("At the location %s, the temperature is %f Fahrenheit, the timezone is %s, and the elevation is %f\\.",
                           TEST_CITY_NAME,
-                          TEST_TEMPERATURE,
+                          TEST_TEMPERATURE_FAHRENHEIT,
                           TEST_TIMEZONE_NAME,
                           TEST_ELEVATION));
 
