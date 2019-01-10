@@ -50,11 +50,12 @@ public class WeatherAppTest_Spring {
         // Must trigger #main from test to ensure it feeds System#out into the stream under test
         WeatherApp.main(new String[]{"80301"});
         Pattern weatherDescriptionPattern = Pattern.compile(
-            String.format("At the location %s, the temperature is %f Fahrenheit, the timezone is %s, and the elevation is %f\\.",
-                          TEST_CITY_NAME,
-                          TEST_TEMPERATURE_FAHRENHEIT,
-                          TEST_TIMEZONE_NAME,
-                          TEST_ELEVATION));
+            String.format(
+                "At the location %s, the temperature is %f Fahrenheit, the timezone is %s, and the elevation is %f feet\\.",
+                TEST_CITY_NAME,
+                TEST_TEMPERATURE_FAHRENHEIT,
+                TEST_TIMEZONE_NAME,
+                TEST_ELEVATION));
 
         assertThat(weatherDescriptionPattern.matcher(outContent.toString()).find(), is(true));
     }
