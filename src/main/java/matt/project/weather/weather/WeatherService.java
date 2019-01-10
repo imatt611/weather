@@ -29,12 +29,6 @@ public interface WeatherService {
 
     /**
      * @param weatherData the weather data
-     * @return the temperature within the weather data, in Kelvin
-     */
-    Double getTemperature(WeatherData weatherData);
-
-    /**
-     * @param weatherData the weather data
      * @return the temperature within the weather data, in Fahrenheit
      */
     Double getTemperatureInFahrenheit(WeatherData weatherData);

@@ -25,7 +25,6 @@ public class OpenWeatherService implements WeatherService {
 
     static final String ROOT_URI = "https://api.openweathermap.org/data/2.5";
     static final String GET_WEATHER_ENDPOINT_TEMPLATE = "/weather?zip={zipCode}&appid={apiKey}";
-    static final String FAHRENHEIT = "FAHRENHEIT";
 
     private static final String TEMPLATE_VAR_NAME__ZIP_CODE = "zipCode";
     private static final String PROP_REF__API_KEY_OPEN_WEATHER = "${api.key.openWeather}";
@@ -99,12 +98,6 @@ public class OpenWeatherService implements WeatherService {
     public String getCityName(WeatherData weatherData)
     {
         return weatherData.getName();
-    }
-
-    @Override
-    public Double getTemperature(WeatherData weatherData)
-    {
-        return weatherData.getTemperature();
     }
 
     @Override
