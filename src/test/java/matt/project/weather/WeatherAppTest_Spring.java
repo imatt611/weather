@@ -23,7 +23,8 @@ public class WeatherAppTest_Spring {
     public static final double TEST_TEMPERATURE_KELVIN = 297.15;
     private static final double TEST_TEMPERATURE_FAHRENHEIT = 75.2;
     public static final String TEST_TIMEZONE_NAME = "Mountain Daylight Time";
-    public static final Double TEST_ELEVATION = 1500.3784;
+    public static final Double TEST_ELEVATION_METERS = 1655.063947038;
+    public static final Double TEST_ELEVATION_FEET = 5430.0;
 
     private final ByteArrayOutputStream outContent = new ByteArrayOutputStream();
     private final ByteArrayOutputStream errContent = new ByteArrayOutputStream();
@@ -55,7 +56,7 @@ public class WeatherAppTest_Spring {
                 TEST_CITY_NAME,
                 TEST_TEMPERATURE_FAHRENHEIT,
                 TEST_TIMEZONE_NAME,
-                TEST_ELEVATION));
+                TEST_ELEVATION_FEET));
 
         assertThat(weatherDescriptionPattern.matcher(outContent.toString()).find(), is(true));
     }

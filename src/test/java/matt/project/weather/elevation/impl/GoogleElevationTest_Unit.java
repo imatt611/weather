@@ -16,6 +16,8 @@ import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Map;
 
+import static matt.project.weather.WeatherAppTest_Spring.TEST_ELEVATION_FEET;
+import static matt.project.weather.WeatherAppTest_Spring.TEST_ELEVATION_METERS;
 import static matt.project.weather.util.GoogleApiConstants.ENDPOINT_TEMPLATE__GET_ELEVATION;
 import static matt.project.weather.util.GoogleApiConstants.ROOT_URI;
 import static org.hamcrest.Matchers.equalTo;
@@ -102,6 +104,22 @@ public class GoogleElevationTest_Unit {
 
         mockServer.verify();
         assertThat(mockData, instanceOf(ElevationData.class));
+    }
+
+    @Test
+    public void calculatesFeetToTwoDecimalPlaces()
+    {
+        ElevationService elevationService = new GoogleElevationService();
+
+        ElevationData elevationData1 = new GoogleElevationData();
+        elevationData1.setElevation(TEST_ELEVATION_METERS);
+
+        assertThat(elevationService.getElevationInFeet(elevationData1), equalTo(TEST_ELEVATION_FEET));
+
+        ElevationData elevationData2 = new GoogleElevationData();
+        elevationData2.setElevation(-1.0);
+
+        assertThat(elevationService.getElevationInFeet(elevationData2), equalTo(-3.28));
     }
 
 }

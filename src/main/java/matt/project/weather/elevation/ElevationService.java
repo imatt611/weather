@@ -11,7 +11,7 @@ public interface ElevationService {
 
     /**
      * @param elevationData the elevation information
-     * @return the elevation, in meters
+     * @return the elevation, in feet, rounded to two decimal places
      */
-    Double getElevation(ElevationData elevationData);
+    Double getElevationInFeet(ElevationData elevationData);
 }
