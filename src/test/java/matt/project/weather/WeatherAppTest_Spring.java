@@ -52,7 +52,7 @@ public class WeatherAppTest_Spring {
         WeatherApp.main(new String[]{"80301"});
         Pattern weatherDescriptionPattern = Pattern.compile(
             String.format(
-                "At the location %s, the temperature is %f Fahrenheit, the timezone is %s, and the elevation is %f feet\\.",
+                "At the location %s, the temperature is %.2f Fahrenheit, the timezone is %s, and the elevation is %f.2n feet\\.",
                 TEST_CITY_NAME,
                 TEST_TEMPERATURE_FAHRENHEIT,
                 TEST_TIMEZONE_NAME,
