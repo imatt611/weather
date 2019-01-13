@@ -185,8 +185,8 @@ public class OpenWeatherTest_Unit {
         assertThat(weatherService.getTemperatureInFahrenheit(weatherData1), equalTo(192.83));
 
         WeatherData weatherData2 = new OpenWeatherData();
-        weatherData2.setTemperature(220.0);
+        weatherData2.setTemperature(220.48374);
 
-        assertThat(weatherService.getTemperatureInFahrenheit(weatherData2), equalTo(-63.67));
+        assertThat(weatherService.getTemperatureInFahrenheit(weatherData2), equalTo(-62.80));
     }
 }

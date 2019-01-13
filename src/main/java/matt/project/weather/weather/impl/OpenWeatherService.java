@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -107,8 +108,8 @@ public class OpenWeatherService implements WeatherService {
         // Formula: 9/5 (K - 273.15) + 32
         return (FORMULA_PART__CELSIUS_FAHRENHEIT__FACTOR
             .multiply(kelvinTemperature.subtract(FORMULA_PART__KELVIN_CELSIUS__DIFFERENCE))
+            .setScale(2, RoundingMode.HALF_UP)
             .add(FORMULA_PART__FAHRENHEIT_CELSIUS__DIFFERENCE))
             .doubleValue();
-
     }
 }
