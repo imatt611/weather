@@ -1,9 +1,12 @@
 package matt.project.weather.elevation.impl;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import junitparams.JUnitParamsRunner;
+import junitparams.Parameters;
 import matt.project.weather.elevation.ElevationData;
 import matt.project.weather.elevation.ElevationService;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
@@ -16,8 +19,6 @@ import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Map;
 
-import static matt.project.weather.WeatherAppTest_Spring.TEST_ELEVATION_FEET;
-import static matt.project.weather.WeatherAppTest_Spring.TEST_ELEVATION_METERS;
 import static matt.project.weather.util.GoogleApiConstants.ENDPOINT_TEMPLATE__GET_ELEVATION;
 import static matt.project.weather.util.GoogleApiConstants.ROOT_URI;
 import static org.hamcrest.Matchers.equalTo;
@@ -28,6 +29,7 @@ import static org.springframework.test.web.client.match.MockRestRequestMatchers.
 import static org.springframework.test.web.client.match.MockRestRequestMatchers.requestToUriTemplate;
 import static org.springframework.test.web.client.response.MockRestResponseCreators.withSuccess;
 
+@RunWith(JUnitParamsRunner.class)
 public class GoogleElevationTest_Unit {
 
     private static final String TEST_RESPONSE_GOOGLE_ELEVATION_JSON = "/testResponse_googleElevation.json";
@@ -107,19 +109,19 @@ public class GoogleElevationTest_Unit {
     }
 
     @Test
-    public void calculatesFeetToTwoDecimalPlaces()
+    @Parameters({
+        "1655.063947038, 5430",
+        "-1, -3.28",
+        "0, 0",
+        "12345678, 40504194.21"
+    })
+    public void calculatesFeetToTwoDecimalPlaces(double elevationMeters, double elevationFeet)
     {
         ElevationService elevationService = new GoogleElevationService();
+        ElevationData elevationData = new GoogleElevationData();
+        elevationData.setElevation(elevationMeters);
 
-        ElevationData elevationData1 = new GoogleElevationData();
-        elevationData1.setElevation(TEST_ELEVATION_METERS);
-
-        assertThat(elevationService.getElevationInFeet(elevationData1), equalTo(TEST_ELEVATION_FEET));
-
-        ElevationData elevationData2 = new GoogleElevationData();
-        elevationData2.setElevation(-1.0);
-
-        assertThat(elevationService.getElevationInFeet(elevationData2), equalTo(-3.28));
+        assertThat(elevationService.getElevationInFeet(elevationData), equalTo(elevationFeet));
     }
 
 }

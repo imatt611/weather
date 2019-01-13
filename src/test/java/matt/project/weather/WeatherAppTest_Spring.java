@@ -24,7 +24,7 @@ public class WeatherAppTest_Spring {
     private static final double TEST_TEMPERATURE_FAHRENHEIT = 75.2;
     public static final String TEST_TIMEZONE_NAME = "Mountain Daylight Time";
     public static final Double TEST_ELEVATION_METERS = 1655.063947038;
-    public static final Double TEST_ELEVATION_FEET = 5430.0;
+    private static final Double TEST_ELEVATION_FEET = 5430.0;
 
     private final ByteArrayOutputStream outContent = new ByteArrayOutputStream();
     private final ByteArrayOutputStream errContent = new ByteArrayOutputStream();

@@ -1,9 +1,12 @@
 package matt.project.weather.weather.impl;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import junitparams.JUnitParamsRunner;
+import junitparams.Parameters;
 import matt.project.weather.weather.WeatherData;
 import matt.project.weather.weather.WeatherService;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
@@ -24,54 +27,41 @@ import static org.springframework.test.web.client.match.MockRestRequestMatchers.
 import static org.springframework.test.web.client.match.MockRestRequestMatchers.requestToUriTemplate;
 import static org.springframework.test.web.client.response.MockRestResponseCreators.withSuccess;
 
+@RunWith(JUnitParamsRunner.class)
 public class OpenWeatherTest_Unit {
 
     private static final String TEST_RESPONSE_OPEN_WEATHER_JSON = "/testResponse_openWeather.json";
     private static final String VALID_TEST_ZIP_CODE = "97209";
 
-    // TODO Parameterized test
     @Test
-    public void evaluatesEquality_whenTrue()
+    @Parameters("5, 6, 7, City Name")
+    public void evaluatesEquality_whenTrue(double temp, double lat, double lon, String name)
     {
         //given
         WeatherData weatherData1 = new OpenWeatherData();
-        weatherData1.setTemperature(5.0);
-        weatherData1.setLatitude(6.0);
-        weatherData1.setLongitude(7.0);
-        weatherData1.setName("City Name");
+        weatherData1.setTemperature(temp);
+        weatherData1.setLatitude(lat);
+        weatherData1.setLongitude(lon);
+        weatherData1.setName(name);
 
         WeatherData weatherData2 = new OpenWeatherData();
-        weatherData2.setTemperature(5.0);
-        weatherData2.setLatitude(6.0);
-        weatherData2.setLongitude(7.0);
-        weatherData2.setName("City Name");
+        weatherData2.setTemperature(temp);
+        weatherData2.setLatitude(lat);
+        weatherData2.setLongitude(lon);
+        weatherData2.setName(name);
 
         //expect
         assertThat(weatherData1, equalTo(weatherData2));
     }
 
     @Test
-    public void evaluatesEquality_whenFalse_forTemperature()
-    {
-        //given
-        WeatherData weatherData1 = new OpenWeatherData();
-        weatherData1.setTemperature(-5.0);
-        weatherData1.setLatitude(6.0);
-        weatherData1.setLongitude(7.0);
-        weatherData1.setName("City Name");
-
-        WeatherData weatherData2 = new OpenWeatherData();
-        weatherData2.setTemperature(5.0);
-        weatherData2.setLatitude(6.0);
-        weatherData2.setLongitude(7.0);
-        weatherData2.setName("City Name");
-
-        //expect
-        assertThat(weatherData1, not(equalTo(weatherData2)));
-    }
-
-    @Test
-    public void evaluatesEquality_whenFalse_forLatitude()
+    @Parameters({
+        "-5 | 6  | 7         | City Name",
+        "5  | 16 | 7         | City Name",
+        "5  | 6  | 7.0000001 | City Name",
+        "5  | 6  | 7         | Not the Same City Name"
+    })
+    public void evaluatesEquality_whenFalse(double temp, double lat, double lon, String name)
     {
         //given
         WeatherData weatherData1 = new OpenWeatherData();
@@ -81,50 +71,10 @@ public class OpenWeatherTest_Unit {
         weatherData1.setName("City Name");
 
         WeatherData weatherData2 = new OpenWeatherData();
-        weatherData2.setTemperature(5.0);
-        weatherData2.setLatitude(16.0);
-        weatherData2.setLongitude(7.0);
-        weatherData2.setName("City Name");
-
-        //expect
-        assertThat(weatherData1, not(equalTo(weatherData2)));
-    }
-
-    @Test
-    public void evaluatesEquality_whenFalse_forLongitude()
-    {
-        //given
-        WeatherData weatherData1 = new OpenWeatherData();
-        weatherData1.setTemperature(5.0);
-        weatherData1.setLatitude(6.0);
-        weatherData1.setLongitude(7.0);
-        weatherData1.setName("City Name");
-
-        WeatherData weatherData2 = new OpenWeatherData();
-        weatherData2.setTemperature(5.0);
-        weatherData2.setLatitude(6.0);
-        weatherData2.setLongitude(7.0000001);
-        weatherData2.setName("City Name");
-
-        //expect
-        assertThat(weatherData1, not(equalTo(weatherData2)));
-    }
-
-    @Test
-    public void evaluatesEquality_whenFalse_forName()
-    {
-        //given
-        WeatherData weatherData1 = new OpenWeatherData();
-        weatherData1.setTemperature(5.0);
-        weatherData1.setLatitude(6.0);
-        weatherData1.setLongitude(7.0);
-        weatherData1.setName("City Name");
-
-        WeatherData weatherData2 = new OpenWeatherData();
-        weatherData2.setTemperature(5.0);
-        weatherData2.setLatitude(6.0);
-        weatherData2.setLongitude(7.0);
-        weatherData2.setName("Not the Same City Name");
+        weatherData2.setTemperature(temp);
+        weatherData2.setLatitude(lat);
+        weatherData2.setLongitude(lon);
+        weatherData2.setName(name);
 
         //expect
         assertThat(weatherData1, not(equalTo(weatherData2)));
@@ -133,7 +83,7 @@ public class OpenWeatherTest_Unit {
     @Test
     public void deserializesResults() throws Exception
     {
-        // expect
+        // given
         WeatherData expectedWeatherData = new OpenWeatherData();
         expectedWeatherData.setTemperature(285.68);
         expectedWeatherData.setLatitude(37.39);
@@ -145,13 +95,14 @@ public class OpenWeatherTest_Unit {
         URL src = getClass().getResource(TEST_RESPONSE_OPEN_WEATHER_JSON);
         WeatherData weatherData = mapper.readValue(src, OpenWeatherData.class);
 
+        // expect
         assertThat(weatherData, equalTo(expectedWeatherData));
     }
 
     @Test
     public void usesKnownOpenWeatherApiContractAndReturnsWeatherData() throws Exception
     {
-        //         given
+        // given
         RestTemplate restTemplate = new RestTemplateBuilder().rootUri(ROOT_URI).build();
         WeatherService localTestWeatherService = new OpenWeatherService(restTemplate);
 
@@ -173,20 +124,20 @@ public class OpenWeatherTest_Unit {
         assertThat(mockData, instanceOf(WeatherData.class));
     }
 
-    //TODO Parametrize
     @Test
-    public void calculatesFahrenheit()
+    @Parameters({
+        "362.5, 192.83",
+        "220.48374, -62.8",
+        "0, -459.67",
+        "-1, -461.47",
+        "12345678, 22221760.73"
+    })
+    public void calculatesFahrenheit(double temperatureKelvin, double temperatureFahrenheit)
     {
         WeatherService weatherService = new OpenWeatherService();
+        WeatherData weatherData = new OpenWeatherData();
+        weatherData.setTemperature(temperatureKelvin);
 
-        WeatherData weatherData1 = new OpenWeatherData();
-        weatherData1.setTemperature(362.5);
-
-        assertThat(weatherService.getTemperatureInFahrenheit(weatherData1), equalTo(192.83));
-
-        WeatherData weatherData2 = new OpenWeatherData();
-        weatherData2.setTemperature(220.48374);
-
-        assertThat(weatherService.getTemperatureInFahrenheit(weatherData2), equalTo(-62.80));
+        assertThat(weatherService.getTemperatureInFahrenheit(weatherData), equalTo(temperatureFahrenheit));
     }
 }
