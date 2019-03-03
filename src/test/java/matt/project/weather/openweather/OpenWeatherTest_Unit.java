@@ -1,4 +1,8 @@
-package matt.project.weather.weather.impl;
+package matt.project.weather.openweather;
+
+import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import junitparams.JUnitParamsRunner;
@@ -13,12 +17,8 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.client.MockRestServiceServer;
 import org.springframework.web.client.RestTemplate;
 
-import java.net.URL;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-
-import static matt.project.weather.weather.impl.OpenWeatherService.GET_WEATHER_ENDPOINT_TEMPLATE;
-import static matt.project.weather.weather.impl.OpenWeatherService.ROOT_URI;
+import static matt.project.weather.openweather.OpenWeatherService.GET_WEATHER_ENDPOINT_TEMPLATE;
+import static matt.project.weather.openweather.OpenWeatherService.ROOT_URI;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.instanceOf;
 import static org.hamcrest.Matchers.not;

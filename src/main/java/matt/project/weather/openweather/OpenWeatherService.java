@@ -1,4 +1,9 @@
-package matt.project.weather.weather.impl;
+package matt.project.weather.openweather;
+
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.util.HashMap;
+import java.util.Map;
 
 import lombok.extern.slf4j.Slf4j;
 import matt.project.weather.weather.WeatherData;
@@ -7,11 +12,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
-
-import java.math.BigDecimal;
-import java.math.RoundingMode;
-import java.util.HashMap;
-import java.util.Map;
 
 import static matt.project.weather.util.ApiConstants.TEMPLATE_VAR_NAME__API_KEY;
 

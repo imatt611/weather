@@ -1,22 +1,24 @@
 package matt.project.weather;
 
+import java.io.ByteArrayOutputStream;
+import java.io.PrintStream;
+import java.util.regex.Pattern;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.test.context.junit4.SpringRunner;
-
-import java.io.ByteArrayOutputStream;
-import java.io.PrintStream;
-import java.util.regex.Pattern;
 
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
 
 @SuppressWarnings("resource")
 @RunWith(SpringRunner.class)
-@SpringBootTest
+//@SpringBootTest(classes = {GoogleElevationConfig.class, GoogleTimeZoneConfig.class, OpenWeatherConfig.class})
+//@WebMvcTest
+@AutoConfigureMockMvc
 public class WeatherAppTest_Spring {
 
     public static final String TEST_CITY_NAME = "Boulder";

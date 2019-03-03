@@ -1,13 +1,13 @@
-package matt.project.weather.weather.impl;
+package matt.project.weather.openweather;
+
+import java.util.HashMap;
+import java.util.Map;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import lombok.Setter;
 import matt.project.weather.weather.WeatherData;
-
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * OpenWeather implementation.

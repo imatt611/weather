@@ -1,6 +1,6 @@
 package matt.project.weather.timezone;
 
-import matt.project.weather.timezone.impl.GoogleTimeZoneService;
+import matt.project.weather.google.GoogleTimeZoneService;
 import org.junit.Test;
 import org.springframework.web.client.RestTemplate;
 

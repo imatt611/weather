@@ -1,6 +1,6 @@
 package matt.project.weather.elevation;
 
-import matt.project.weather.elevation.impl.GoogleElevationService;
+import matt.project.weather.google.GoogleElevationService;
 import org.junit.Test;
 import org.springframework.web.client.RestTemplate;
 

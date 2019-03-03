@@ -1,4 +1,10 @@
-package matt.project.weather.elevation.impl;
+package matt.project.weather.google;
+
+import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.HashMap;
+import java.util.Map;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import junitparams.JUnitParamsRunner;
@@ -13,14 +19,8 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.client.MockRestServiceServer;
 import org.springframework.web.client.RestTemplate;
 
-import java.net.URL;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.util.HashMap;
-import java.util.Map;
-
-import static matt.project.weather.util.GoogleApiConstants.ENDPOINT_TEMPLATE__GET_ELEVATION;
-import static matt.project.weather.util.GoogleApiConstants.ROOT_URI;
+import static matt.project.weather.google.GoogleApiConstants.ENDPOINT_TEMPLATE__GET_ELEVATION;
+import static matt.project.weather.google.GoogleApiConstants.ROOT_URI;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.instanceOf;
 import static org.hamcrest.Matchers.not;

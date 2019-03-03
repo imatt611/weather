@@ -1,12 +1,12 @@
-package matt.project.weather.elevation.impl;
+package matt.project.weather.google;
+
+import java.util.List;
+import java.util.Map;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 import matt.project.weather.elevation.ElevationData;
-
-import java.util.List;
-import java.util.Map;
 
 @Data
 @JsonIgnoreProperties(ignoreUnknown = true)

@@ -1,4 +1,4 @@
-package matt.project.weather.timezone.impl;
+package matt.project.weather.google;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;

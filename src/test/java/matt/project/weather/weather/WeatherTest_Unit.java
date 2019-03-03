@@ -1,6 +1,6 @@
 package matt.project.weather.weather;
 
-import matt.project.weather.weather.impl.OpenWeatherService;
+import matt.project.weather.openweather.OpenWeatherService;
 import org.junit.Test;
 import org.springframework.web.client.RestTemplate;
 

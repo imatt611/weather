@@ -1,4 +1,4 @@
-package matt.project.weather.util;
+package matt.project.weather.google;
 
 public enum LatitudeLongitude {
     ;
